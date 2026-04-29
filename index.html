@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WebCraft Studio - Portfolio</title>
+<title>My Web Design Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -319,13 +319,29 @@
     .contact-section { padding: 60px 4%; }
     footer { padding: 24px 4%; }
   }
+
+  /* Blinking TEXT badge */
+@keyframes softBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.15; }
+}
+
+.blink-text {
+  display: inline-block;
+  color: #e53935;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  animation: softBlink 1.4s ease-in-out infinite;
+  margin-top: 6px;
+}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">WebCraft Studio</div>
+  <div class="nav-logo">Web Design</div>
   <ul class="nav-links">
     <li><a href="#work">Work</a></li>
     <li><a href="#about">About</a></li>
@@ -381,7 +397,7 @@
       </div>
       <div class="card-body">
         <div class="card-num">01 — Cafe</div>
-        <div class="card-title">Green Cucina</div>
+        <div class="card-title">Green Cucina <span class="blink-text"><h2> ● CAFE</h2></span></div>
         <div class="card-desc">A warm, inviting website for an artisan coffee shop with menu, reservations, and ambiance.</div>
         <div class="card-tags">
           <span class="tag">Restaurant</span>
@@ -415,8 +431,8 @@
         </div>
       </div>
       <div class="card-body">
-        <div class="card-num">02 — Cafe</div>
-        <div class="card-title">Brewed Haven</div>
+        <div class="card-num">02 — Cafe </div>
+        <div class="card-title">Brewed Haven <span class="blink-text"><h2> ● CAFE</h2></span></div>
         <div class="card-desc">A warm, inviting website for an artisan coffee shop with menu, reservations, and ambiance.</div>
         <div class="card-tags">
           <span class="tag">Restaurant</span>
@@ -450,7 +466,7 @@
       </div>
       <div class="card-body">
         <div class="card-num">03 — Gym</div>
-        <div class="card-title">Ironpeak</div>
+        <div class="card-title">Ironpeak <span class="blink-text"><h2> ● GYM</h2></span></div>
         <div class="card-desc">Bold, high-energy design for a premium fitness center with membership plans and class schedules.</div>
         <div class="card-tags">
           <span class="tag">Fitness</span>
@@ -482,7 +498,7 @@
       </div>
       <div class="card-body">
         <div class="card-num">04 — Salon</div>
-        <div class="card-title">Lumière salon</div>
+        <div class="card-title">Lumière salon <span class="blink-text"><h2> ● SALON</h2></span></div>
         <div class="card-desc">Elegant and minimal website for a premium beauty studio with services and online booking.</div>
         <div class="card-tags">
           <span class="tag">Beauty</span>
@@ -512,7 +528,7 @@
       </div>
       <div class="card-body">
         <div class="card-num">05 — Turf</div>
-        <div class="card-title">GreenZone Turf</div>
+        <div class="card-title">GreenZone Turf <span class="blink-text"><h2> ● TURF</h2></span></div>
         <div class="card-desc">Elegant and minimal website for a sports turf with services and online booking.</div>
         <div class="card-tags">
           <span class="tag">Sports</span>
@@ -559,7 +575,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <span>© 2025 YourName. All rights reserved.</span>
+  <span>© All rights reserved.</span>
   <div class="footer-links">
     <a href="#"></a>
     <a href="#"></a>
