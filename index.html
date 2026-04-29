@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Web Design Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #f5f0e8;
+    --bg2:       #ede6d6;
+    --bg3:       #e4dbc8;
+    --brown:     #6b4f35;
+    --brown-mid: #9c7a5a;
+    --brown-lt:  #c4a882;
+    --text:      #2e1f0f;
+    --text-mid:  #6b5340;
+    --text-lt:   #a08060;
+    --border:    rgba(107,79,53,0.18);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(245,240,232,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 6%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 58px;
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 600;
+    color: var(--brown); letter-spacing: 0.04em;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; font-weight: 400; letter-spacing: 0.08em;
+    color: var(--text-mid); text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--brown); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 100px 6% 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 80%, rgba(164,120,70,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 80% 20%, rgba(107,79,53,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--brown-mid);
+    border: 0.5px solid var(--brown-lt);
+    padding: 5px 16px; border-radius: 20px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.7s ease both;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 8vw, 92px);
+    font-weight: 500; line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 20px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .hero h1 em { color: var(--brown); font-style: italic; }
+  .hero-sub {
+    font-size: 15px; color: var(--text-lt);
+    max-width: 460px; line-height: 1.8;
+    margin-bottom: 40px;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+  .hero-cta {
+    display: inline-block;
+    background: var(--brown);
+    color: var(--bg);
+    font-family: 'Jost', sans-serif;
+    font-size: 13px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 13px 34px; border-radius: 3px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .hero-cta:hover { background: var(--text); transform: translateY(-1px); }
+
+  .hero-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--brown-lt), transparent);
+    margin: 52px auto 0;
+    animation: fadeUp 0.7s 0.5s ease both;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section { padding: 90px 6%; }
+  .section-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--brown-mid);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(30px, 4vw, 46px); font-weight: 500;
+    color: var(--text); line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .section-desc {
+    font-size: 14px; color: var(--text-lt);
+    max-width: 500px; line-height: 1.8;
+    margin-bottom: 56px;
+  }
+
+  /* ── PROJECTS GRID ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 28px;
+  }
+
+  .project-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    text-decoration: none; color: inherit;
+    display: block;
+  }
+  .project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(107,79,53,0.12);
+  }
+
+  .card-thumb {
+    height: 220px;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-thumb .mock {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    padding: 16px;
+  }
+  /* Cafe mock */
+  .cafe-mock { background: #1c120a; }
+  .cafe-mock .m-bar { height: 6px; border-radius: 3px; background: #c9a06e; margin-bottom: 12px; }
+  .cafe-mock .m-hero {
+    flex: 1; border-radius: 6px;
+    background: rgba(201,160,110,0.1);
+    border: 0.5px solid rgba(201,160,110,0.25);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
+  }
+  .cafe-mock .m-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: #c9a06e; font-weight: 600; }
+  .cafe-mock .m-sub { font-size: 9px; color: rgba(201,160,110,0.6); letter-spacing: 0.1em; }
+  .cafe-mock .m-btn { font-size: 8px; padding: 4px 12px; background: #c9a06e; color: #1c120a; border-radius: 3px; margin-top: 4px; }
+  .cafe-mock .m-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 10px; }
+  .cafe-mock .m-card { height: 26px; border-radius: 4px; background: rgba(201,160,110,0.12); }
+
+  /* Gym mock */
+  .gym-mock { background: #0a0a0a; }
+  .gym-mock .m-bar { height: 6px; border-radius: 3px; background: #d4f000; margin-bottom: 12px; }
+  .gym-mock .m-hero {
+    flex: 1; border-radius: 6px;
+    background: rgba(212,240,0,0.05);
+    border: 0.5px solid rgba(212,240,0,0.2);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 5px;
+  }
+  .gym-mock .m-title { font-size: 16px; color: #d4f000; font-weight: 700; letter-spacing: 0.12em; }
+  .gym-mock .m-sub { font-size: 8px; color: rgba(212,240,0,0.5); letter-spacing: 0.08em; }
+  .gym-mock .m-btn { font-size: 8px; padding: 4px 12px; background: #d4f000; color: #0a0a0a; border-radius: 2px; font-weight: 700; margin-top: 4px; }
+  .gym-mock .m-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 10px; }
+  .gym-mock .m-card { height: 26px; border-radius: 4px; background: rgba(212,240,0,0.08); border: 0.5px solid rgba(212,240,0,0.12); }
+
+  /* Salon mock */
+  .salon-mock { background: #261018; }
+  .salon-mock .m-bar { height: 6px; border-radius: 3px; background: #e8b0c4; margin-bottom: 12px; }
+  .salon-mock .m-hero {
+    flex: 1; border-radius: 6px;
+    background: rgba(232,176,196,0.08);
+    border: 0.5px solid rgba(232,176,196,0.2);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
+  }
+  .salon-mock .m-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: #e8b0c4; font-weight: 600; letter-spacing: 0.06em; }
+  .salon-mock .m-sub { font-size: 9px; color: rgba(232,176,196,0.55); letter-spacing: 0.1em; }
+  .salon-mock .m-btn { font-size: 8px; padding: 4px 12px; background: #e8b0c4; color: #261018; border-radius: 10px; margin-top: 4px; }
+  .salon-mock .m-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 10px; }
+  .salon-mock .m-card { height: 26px; border-radius: 4px; background: rgba(232,176,196,0.1); }
+
+  .card-overlay {
+    position: absolute; inset: 0;
+    background: rgba(30,15,5,0.55);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .project-card:hover .card-overlay { opacity: 1; }
+  .overlay-btn {
+    font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #f5f0e8;
+    border: 0.5px solid rgba(245,240,232,0.6);
+    padding: 9px 22px; border-radius: 3px;
+  }
+
+  .card-body { padding: 20px 22px 22px; }
+  .card-num {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    color: var(--brown-lt); margin-bottom: 5px;
+  }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600;
+    color: var(--text); margin-bottom: 6px; line-height: 1.2;
+  }
+  .card-desc { font-size: 13px; color: var(--text-lt); line-height: 1.7; margin-bottom: 14px; }
+  .card-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px; font-weight: 400; letter-spacing: 0.06em;
+    color: var(--brown-mid);
+    background: rgba(107,79,53,0.1);
+    border: 0.5px solid rgba(107,79,53,0.18);
+    padding: 3px 10px; border-radius: 20px;
+  }
+
+  /* ── ABOUT STRIP ── */
+  .about-strip {
+    background: var(--bg3);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    padding: 70px 6%;
+    display: flex; gap: 60px; align-items: center;
+    flex-wrap: wrap;
+  }
+  .about-text { flex: 1; min-width: 260px; }
+  .about-text p { font-size: 14px; color: var(--text-mid); line-height: 1.9; max-width: 480px; }
+  .about-stats { display: flex; gap: 40px; flex-wrap: wrap; }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px; font-weight: 500; color: var(--brown);
+    line-height: 1;
+  }
+  .stat-label { font-size: 12px; color: var(--text-lt); letter-spacing: 0.08em; margin-top: 4px; }
+
+  /* ── CONTACT ── */
+  .contact-section {
+    padding: 90px 6%;
+    text-align: center;
+  }
+  .contact-section .section-desc { margin: 0 auto 36px; }
+  .contact-email {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 4vw, 38px);
+    font-weight: 500; color: var(--brown);
+    text-decoration: none;
+    border-bottom: 1px solid var(--brown-lt);
+    padding-bottom: 3px;
+    transition: color 0.2s;
+  }
+  .contact-email:hover { color: var(--text); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 28px 6%;
+    border-top: 0.5px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer span { font-size: 12px; color: var(--text-lt); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 12px; color: var(--text-lt); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--brown); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    nav { padding: 0 4%; }
+    .nav-links { gap: 18px; }
+    .hero, .section { padding-left: 4%; padding-right: 4%; }
+    .about-strip { padding: 50px 4%; }
+    .contact-section { padding: 60px 4%; }
+    footer { padding: 24px 4%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Web Design</div>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Website Designer</div>
+  <h1>Crafting <em>digital</em><br>experiences</h1>
+  <p class="hero-sub">A collection of websites built for real businesses — from cafes and gyms to salons.</p>
+  <a href="#work" class="hero-cta">View My Work</a>
+  <div class="hero-line"></div>
+</section>
+
+<!-- WORK -->
+<section class="section" id="work">
+  <div class="reveal">
+    <p class="section-label">Portfolio</p>
+    <h2 class="section-title">Selected Projects</h2>
+    
+    <p class="section-desc">Each site is built from scratch, designed to match the brand's personality and purpose.</p>
+    <h3>C-Panel Access <a href="https://docs.google.com/spreadsheets/d/1EfPAji_nhB7Pi9dFAretArZXyrvcL6JV4CUnMq5YG_w/edit?usp=sharing">Cafe1</a>, 
+      <a href="https://docs.google.com/spreadsheets/d/1KvO4fXJF79hmCsgJ1-lNCtEpCTUNm1ehyNwlAvkrv9w/edit?usp=sharing">Cafe2</a>, 
+      <a href="https://docs.google.com/spreadsheets/d/1bsr7Vlo4DQFmgOHeVnQ_I0SUGtIy64N5_wqLEAFxCH0/edit?usp=sharing">Gym</a>,
+      <a href="https://docs.google.com/spreadsheets/d/1XwIpoB5G0ND3us-EJm5lS50xrk06lTGIvckrqi0FgQM/edit?usp=sharing">Turf</a>,  
+      <a href="https://docs.google.com/spreadsheets/d/1H6AAu4U652Aw2RXRuUYzZDKvcwsk1vmsjsi2wEoZEr0/edit?usp=sharing">Salon</a></h3>
+  </div>
+
+  <div class="projects-grid">
+
+    <!-- CAFE1 -->
+    <a href="green-cucina/index.html" class="project-card reveal" style="transition-delay: 0.1s;">
+      <div class="card-thumb">
+        <div class="mock cafe-mock">
+          <div class="m-bar"></div>
+          <div class="m-hero">
+            <div class="m-title">Green Cucina - CAFE</div>
+            
+            <div class="m-sub">ARTISAN COFFEE · EST. 2019</div>
+            <div class="m-btn">Reserve a Table</div>
+          </div>
+          <div class="m-cards">
+            <div class="m-card"></div>
+            <div class="m-card"></div>
+            <div class="m-card"></div>
+          </div>
+        </div>
+        <div class="card-overlay">
+          <div class="overlay-btn">View Site →</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">01 — Cafe</div>
+        <div class="card-title">Green Cucina</div>
+        <div class="card-desc">A warm, inviting website for an artisan coffee shop with menu, reservations, and ambiance.</div>
+        <div class="card-tags">
+          <span class="tag">Restaurant</span>
+          <span class="tag">Reservations</span>
+          <span class="tag">Menu</span>
+          
+        </div>
+       
+      </div>
+    </a>
+
+    <!-- CAFE2 -->
+    <a href="cafe-website/index.html" class="project-card reveal" style="transition-delay: 0.1s;">
+      <div class="card-thumb">
+        <div class="mock cafe-mock">
+          <div class="m-bar"></div>
+          <div class="m-hero">
+            <div class="m-title">Brewed Haven - CAFE</div>
+            
+            <div class="m-sub">ARTISAN COFFEE · EST. 2019</div>
+            <div class="m-btn">Reserve a Table</div>
+          </div>
+          <div class="m-cards">
+            <div class="m-card"></div>
+            <div class="m-card"></div>
+            <div class="m-card"></div>
+          </div>
+        </div>
+        <div class="card-overlay">
+          <div class="overlay-btn">View Site →</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">02 — Cafe</div>
+        <div class="card-title">Brewed Haven</div>
+        <div class="card-desc">A warm, inviting website for an artisan coffee shop with menu, reservations, and ambiance.</div>
+        <div class="card-tags">
+          <span class="tag">Restaurant</span>
+          <span class="tag">Reservations</span>
+          <span class="tag">Menu</span>
+          
+        </div>
+       
+      </div>
+    </a>
+
+    <!-- GYM -->
+    <a href="gym-website/index.html" class="project-card reveal" style="transition-delay: 0.2s;">
+      <div class="card-thumb">
+        <div class="mock gym-mock">
+          <div class="m-bar"></div>
+          <div class="m-hero">
+            <div class="m-title">Ironpeak - GYM</div>
+            <div class="m-sub">TRAIN · DOMINATE · REPEAT</div>
+            <div class="m-btn">JOIN NOW</div>
+          </div>
+          <div class="m-cards">
+            <div class="m-card"></div>
+            <div class="m-card"></div>
+            <div class="m-card"></div>
+          </div>
+        </div>
+        <div class="card-overlay">
+          <div class="overlay-btn">View Site →</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">03 — Gym</div>
+        <div class="card-title">Ironpeak</div>
+        <div class="card-desc">Bold, high-energy design for a premium fitness center with membership plans and class schedules.</div>
+        <div class="card-tags">
+          <span class="tag">Fitness</span>
+          <span class="tag">Membership</span>
+          <span class="tag">Classes</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- SALON -->
+    <a href="Lumière-salon/index.html" class="project-card reveal" style="transition-delay: 0.3s;">
+      <div class="card-thumb">
+        <div class="mock salon-mock">
+          <div class="m-bar"></div>
+          <div class="m-hero">
+            <div class="m-title">Lumière - Salon</div>
+            <div class="m-sub">BEAUTY REDEFINED</div>
+            <div class="m-btn">Book Now</div>
+          </div>
+          <div class="m-cards">
+            <div class="m-card"></div>
+            <div class="m-card"></div>
+            <div class="m-card"></div>
+          </div>
+        </div>
+        <div class="card-overlay">
+          <div class="overlay-btn">View Site →</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">04 — Salon</div>
+        <div class="card-title">Lumière salon</div>
+        <div class="card-desc">Elegant and minimal website for a premium beauty studio with services and online booking.</div>
+        <div class="card-tags">
+          <span class="tag">Beauty</span>
+          <span class="tag">Booking</span>
+          <span class="tag">Services</span>
+        </div></div> </a>
+
+        <!-- TURF -->
+    <a href="turf-website/index.html" class="project-card reveal" style="transition-delay: 0.3s;">
+      <div class="card-thumb">
+        <div class="mock salon-mock">
+          <div class="m-bar"></div>
+          <div class="m-hero">
+            <div class="m-title">GreenZone - Turf</div>
+            <div class="m-sub">Sports</div>
+            <div class="m-btn">Book Now</div>
+          </div>
+          <div class="m-cards">
+            <div class="m-card"></div>
+            <div class="m-card"></div>
+            <div class="m-card"></div>
+          </div>
+        </div>
+        <div class="card-overlay">
+          <div class="overlay-btn">View Site →</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">05 — Turf</div>
+        <div class="card-title">GreenZone Turf</div>
+        <div class="card-desc">Elegant and minimal website for a sports turf with services and online booking.</div>
+        <div class="card-tags">
+          <span class="tag">Sports</span>
+          <span class="tag">Booking</span>
+          <span class="tag">Services</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="about-strip reveal" id="about">
+  <div class="about-text">
+    <p class="section-label" style="margin-bottom:10px;">About</p>
+    <h2 class="section-title" style="margin-bottom:14px;">A designer who builds</h2>
+    <p>I design and develop websites for local businesses — clean, fast, and built to convert. Every project starts with understanding the brand, then crafting something that truly fits.</p>
+  </div>
+  <div class="about-stats">
+    <div class="stat-item">
+      <div class="stat-num">3+</div>
+      <div class="stat-label">Projects</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Industries</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Custom built</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-section reveal" id="contact">
+  <p class="section-label">Get in touch</p>
+  <h2 class="section-title">Liked what you saw?</h2>
+  <p class="section-desc">I'm available for new projects. Let's talk about building your website.</p>
+  
+  <a href="https://api.whatsapp.com/send/?phone=%2B916360206628&text&type=phone_number&app_absent=0" class="contact-email">WhatsApp</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 YourName. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="#"></a>
+    <a href="#"></a>
+    <a href="https://api.whatsapp.com/send/?phone=%2B916360206628&text&type=phone_number&app_absent=0">WhatsApp</a>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

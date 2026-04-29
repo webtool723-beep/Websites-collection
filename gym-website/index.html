@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IRONPEAK GYM | Forge Your Legacy</title>
+  <meta name="description" content="Kota's premier high-performance gym. State-of-the-art equipment, elite coaches, and a community that pushes you beyond your limits. Transform your body. Transform your life." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700;900&family=Barlow+Condensed:wght@400;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="logo">IRON<span>PEAK</span></a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#coaches">Coaches</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#testimonials">Results</a></li>
+        <li><a href="#contact" class="nav-cta">JOIN NOW</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#about" onclick="closeMenu()">About</a></li>
+      <li><a href="#programs" onclick="closeMenu()">Programs</a></li>
+      <li><a href="#coaches" onclick="closeMenu()">Coaches</a></li>
+      <li><a href="#pricing" onclick="closeMenu()">Pricing</a></li>
+      <li><a href="#testimonials" onclick="closeMenu()">Results</a></li>
+      <li><a href="#contact" onclick="closeMenu()">Join Now</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg">
+      <div class="hero-overlay"></div>
+      <div class="grid-lines"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">⚡ KOTA'S #1 RATED GYM — 5 YEARS RUNNING</div>
+      <h1 class="hero-title">
+        FORGE YOUR<br />
+        <span class="accent">LEGACY</span><br />
+        IN IRON
+      </h1>
+      <p class="hero-sub">Stop dreaming. Start becoming. At IronPeak, elite coaching meets world-class equipment — designed to turn your potential into power.</p>
+      <div class="hero-cta-group">
+        <a href="#contact" class="btn-primary">CLAIM YOUR FREE TRIAL</a>
+        <a href="#programs" class="btn-ghost">EXPLORE PROGRAMS ↓</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">2,400+</span><span class="stat-label">Members Transformed</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">18</span><span class="stat-label">Expert Coaches</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">97%</span><span class="stat-label">Member Retention Rate</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">10K+</span><span class="stat-label">sq.ft. Training Space</span></div>
+      </div>
+    </div>
+    <div class="scroll-hint">SCROLL DOWN ↓</div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <section class="trust-bar">
+    <div class="trust-inner">
+      <div class="trust-item"><span class="trust-icon">🏆</span> Award-Winning Facility 2024</div>
+      <div class="trust-item"><span class="trust-icon">✅</span> NSCA Certified Trainers</div>
+      <div class="trust-item"><span class="trust-icon">🔒</span> No Lock-In Contracts</div>
+      <div class="trust-item"><span class="trust-icon">⭐</span> 4.9/5 on Google (600+ Reviews)</div>
+      <div class="trust-item"><span class="trust-icon">📍</span> Open 5 AM – 11 PM Daily</div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <div class="section-tag">WHY IRONPEAK</div>
+          <h2 class="section-title">We Don't Just Build Bodies.<br /><span class="accent">We Build Champions.</span></h2>
+          <p>Most gyms give you machines and a locker room. IronPeak gives you a <strong>transformation ecosystem</strong> — expert-designed programming, 1-on-1 coaching support, nutritional guidance, and a community of high-achievers who hold you accountable.</p>
+          <p>Whether you're a first-timer or a seasoned athlete, our facility and coaches meet you exactly where you are — and take you where you've always wanted to be.</p>
+          <div class="about-features">
+            <div class="feature-item">
+              <div class="feature-icon">🏋️</div>
+              <div>
+                <strong>Premium Equipment</strong>
+                <p>Hammer Strength, Rogue, and Life Fitness rigs. Zero wait times.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🧬</div>
+              <div>
+                <strong>Science-Backed Programming</strong>
+                <p>Every plan is built on proven methodology — not guesswork.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🤝</div>
+              <div>
+                <strong>Accountability Community</strong>
+                <p>Surround yourself with people who show up and push harder.</p>
+              </div>
+            </div>
+          </div>
+          <a href="#contact" class="btn-primary">START YOUR TRANSFORMATION</a>
+        </div>
+        <div class="about-visual reveal">
+          <div class="about-img-block">
+            <div class="img-card img-card-1">
+              <div class="img-placeholder gym1">
+                <span>POWER ZONE</span>
+              </div>
+            </div>
+            <div class="img-card img-card-2">
+              <div class="img-placeholder gym2">
+                <span>CARDIO DECK</span>
+              </div>
+            </div>
+            <div class="floating-badge">
+              <span class="fb-num">12+</span>
+              <span class="fb-text">Years of Excellence</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMS -->
+  <section id="programs">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">OUR PROGRAMS</div>
+        <h2 class="section-title">Every Goal. <span class="accent">Every Body. Every Level.</span></h2>
+        <p class="section-sub">Choose your path to peak performance. Our programs are engineered for real results — not empty promises.</p>
+      </div>
+      <div class="programs-grid">
+        <div class="program-card reveal" data-delay="0">
+          <div class="program-icon">💪</div>
+          <h3>Strength & Powerlifting</h3>
+          <p>Structured progressive overload programming designed to maximize your squat, bench, and deadlift. For beginners to competitive lifters.</p>
+          <ul>
+            <li>✓ Personalized load progression</li>
+            <li>✓ Form video analysis</li>
+            <li>✓ Competition prep available</li>
+          </ul>
+          <a href="#contact" class="program-link">INQUIRE NOW →</a>
+        </div>
+        <div class="program-card reveal featured-program" data-delay="100">
+          <div class="featured-tag">MOST POPULAR</div>
+          <div class="program-icon">🔥</div>
+          <h3>Body Transformation</h3>
+          <p>The complete fat-loss and muscle-building system. Combines HIIT, resistance training, and nutrition coaching into one unstoppable plan.</p>
+          <ul>
+            <li>✓ Nutrition & macro planning</li>
+            <li>✓ Weekly progress check-ins</li>
+            <li>✓ Community accountability group</li>
+          </ul>
+          <a href="#contact" class="program-link">INQUIRE NOW →</a>
+        </div>
+        <div class="program-card reveal" data-delay="200">
+          <div class="program-icon">🧘</div>
+          <h3>Functional Fitness</h3>
+          <p>Build athleticism, mobility, and real-world strength. Perfect for busy professionals who want to feel unstoppable in and out of the gym.</p>
+          <ul>
+            <li>✓ Movement screening</li>
+            <li>✓ Corrective exercise protocols</li>
+            <li>✓ Flexible scheduling</li>
+          </ul>
+          <a href="#contact" class="program-link">INQUIRE NOW →</a>
+        </div>
+        <div class="program-card reveal" data-delay="300">
+          <div class="program-icon">🥊</div>
+          <h3>Combat & Conditioning</h3>
+          <p>MMA-inspired conditioning, boxing, and kickboxing classes. Burn fat, boost confidence, and learn real self-defence techniques.</p>
+          <ul>
+            <li>✓ All fitness levels welcome</li>
+            <li>✓ Bag & pad work included</li>
+            <li>✓ 12+ classes weekly</li>
+          </ul>
+          <a href="#contact" class="program-link">INQUIRE NOW →</a>
+        </div>
+        <div class="program-card reveal" data-delay="400">
+          <div class="program-icon">👩</div>
+          <h3>Women's Empowerment</h3>
+          <p>A dedicated women's training environment built on strength, community, and confidence. Because strong women lift each other up.</p>
+          <ul>
+            <li>✓ Female-only coaching available</li>
+            <li>✓ Hormone-cycle training</li>
+            <li>✓ Postpartum support</li>
+          </ul>
+          <a href="#contact" class="program-link">INQUIRE NOW →</a>
+        </div>
+        <div class="program-card reveal" data-delay="500">
+          <div class="program-icon">🏃</div>
+          <h3>Athletic Performance</h3>
+          <p>Sport-specific conditioning for athletes. Speed, agility, strength, and endurance — all fine-tuned for your sport and season.</p>
+          <ul>
+            <li>✓ VO2 max & lactate testing</li>
+            <li>✓ Off-season periodization</li>
+            <li>✓ Team packages available</li>
+          </ul>
+          <a href="#contact" class="program-link">INQUIRE NOW →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COACHES -->
+  <section id="coaches">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">MEET THE COACHES</div>
+        <h2 class="section-title">Trained by the <span class="accent">Best in the Business</span></h2>
+        <p class="section-sub">Our coaching team holds over 45 certifications across 8 specializations. Your success is their obsession.</p>
+      </div>
+      <div class="coaches-grid">
+        <div class="coach-card reveal">
+          <div class="coach-photo cp1"><span>RK</span></div>
+          <div class="coach-info">
+            <h4>Rohit Khanna</h4>
+            <span class="coach-role">Head Strength Coach</span>
+            <p>NSCA-CSCS · 14 Years Experience · Former National Powerlifter</p>
+            <div class="coach-spec">Speciality: Powerlifting · Hypertrophy</div>
+          </div>
+        </div>
+        <div class="coach-card reveal">
+          <div class="coach-photo cp2"><span>PS</span></div>
+          <div class="coach-info">
+            <h4>Priya Sharma</h4>
+            <span class="coach-role">Fat Loss & Nutrition Expert</span>
+            <p>ACE-CPT · MSc Sports Nutrition · 10 Years Experience</p>
+            <div class="coach-spec">Speciality: Body Composition · Women's Health</div>
+          </div>
+        </div>
+        <div class="coach-card reveal">
+          <div class="coach-photo cp3"><span>AV</span></div>
+          <div class="coach-info">
+            <h4>Arjun Verma</h4>
+            <span class="coach-role">Athletic Performance Coach</span>
+            <p>NASM-PES · Ex-State Cricketer · 8 Years Experience</p>
+            <div class="coach-spec">Speciality: Speed · Agility · Sports Conditioning</div>
+          </div>
+        </div>
+        <div class="coach-card reveal">
+          <div class="coach-photo cp4"><span>NM</span></div>
+          <div class="coach-info">
+            <h4>Nisha Mathur</h4>
+            <span class="coach-role">Functional Movement Specialist</span>
+            <p>FMS Level 2 · ACSM-EP · 9 Years Experience</p>
+            <div class="coach-spec">Speciality: Mobility · Injury Rehab · Functional Fitness</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">MEMBERSHIP PLANS</div>
+        <h2 class="section-title">Transparent Pricing. <span class="accent">Zero Hidden Fees.</span></h2>
+        <p class="section-sub">No lock-in. No surprises. Just results. All plans include unlimited gym access + group classes.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card reveal">
+          <div class="price-tier">STARTER</div>
+          <div class="price-amount">₹1,499<span>/month</span></div>
+          <p>Perfect for those starting their fitness journey and need access to world-class facilities.</p>
+          <ul class="price-features">
+            <li>✓ Unlimited Gym Access</li>
+            <li>✓ 4 Group Classes / Month</li>
+            <li>✓ Locker & Shower Access</li>
+            <li>✓ Fitness Assessment (1st Month)</li>
+            <li class="disabled">✗ Personal Training Sessions</li>
+            <li class="disabled">✗ Nutrition Coaching</li>
+          </ul>
+          <a href="#contact" class="btn-outline">GET STARTED</a>
+        </div>
+        <div class="price-card featured-price reveal">
+          <div class="popular-badge">BEST VALUE</div>
+          <div class="price-tier">ELITE</div>
+          <div class="price-amount">₹2,999<span>/month</span></div>
+          <p>The complete transformation package for serious members committed to rapid results.</p>
+          <ul class="price-features">
+            <li>✓ Unlimited Gym Access</li>
+            <li>✓ Unlimited Group Classes</li>
+            <li>✓ 4 Personal Training Sessions</li>
+            <li>✓ Monthly Nutrition Consultation</li>
+            <li>✓ Progress Tracking & Reports</li>
+            <li>✓ Priority Booking</li>
+          </ul>
+          <a href="#contact" class="btn-primary">CLAIM YOUR SPOT</a>
+        </div>
+        <div class="price-card reveal">
+          <div class="price-tier">CHAMPION</div>
+          <div class="price-amount">₹4,999<span>/month</span></div>
+          <p>For athletes and high-performers who demand elite-level attention and coaching.</p>
+          <ul class="price-features">
+            <li>✓ Everything in Elite</li>
+            <li>✓ 8 Personal Training Sessions</li>
+            <li>✓ Weekly Nutrition Coaching</li>
+            <li>✓ Custom Training Programs</li>
+            <li>✓ Body Composition Scans</li>
+            <li>✓ 24/7 Coach WhatsApp Access</li>
+          </ul>
+          <a href="#contact" class="btn-outline">GET STARTED</a>
+        </div>
+      </div>
+      <p class="pricing-note">🎁 <strong>First-time members get a FREE 3-day trial pass</strong> — no credit card required. <a href="#contact">Claim yours now →</a></p>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="testimonials">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">REAL RESULTS</div>
+        <h2 class="section-title">Stories That Prove <span class="accent">It's Possible</span></h2>
+        <p class="section-sub">Don't take our word for it. Read what our members achieved — with real numbers, real timelines, real transformations.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testi-card reveal">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"I lost 18kg in 5 months. Not through crash diets or extreme workouts — through a sustainable plan that Coach Priya built specifically for me. IronPeak changed my life."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">SM</div>
+            <div>
+              <strong>Sunita Mehra</strong>
+              <span>Lost 18kg in 5 months</span>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card reveal">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"As a busy doctor, I only had 45 mins a day. Rohit designed a program that fit my schedule and I gained 8kg of muscle in 4 months. The coaches here are next-level."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">DK</div>
+            <div>
+              <strong>Dr. Deepak Kumar</strong>
+              <span>+8kg muscle in 4 months</span>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card reveal">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"I'd tried 3 gyms before. None of them felt like community. IronPeak is different — the people, the energy, the coaches. I've been a member for 2 years and I'm never leaving."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">AS</div>
+            <div>
+              <strong>Ananya Singh</strong>
+              <span>Member for 2+ Years</span>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card reveal">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"Qualified for State-level cricket after 6 months of training with Arjun. The athletic conditioning program is unmatched. No other gym in Kota comes close."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">RP</div>
+            <div>
+              <strong>Rahul Patel</strong>
+              <span>State-Level Cricketer</span>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card reveal">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"Post-pregnancy, I was hesitant to start. Nisha's postpartum program and the women's community at IronPeak gave me my confidence back. I feel stronger than I ever did before."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">MJ</div>
+            <div>
+              <strong>Meera Joshi</strong>
+              <span>Postpartum Fitness Journey</span>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card reveal">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"The equipment quality alone is worth it. But add the coaches, the programming, and the vibe — IronPeak is a completely different tier. Worth every rupee."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">VG</div>
+            <div>
+              <strong>Vikram Gupta</strong>
+              <span>Member for 3 Years</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="cta-banner-inner">
+      <div class="reveal">
+        <h2>Your Strongest Self Is 90 Days Away.</h2>
+        <p>Over 2,400 people in Kota have already made the decision. The question is — are you next?</p>
+        <a href="#contact" class="btn-primary btn-large">BOOK YOUR FREE TRIAL TODAY</a>
+        <p class="cta-note">⚡ Limited spots available this month. No commitment required.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / ENQUIRY FORM -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <div class="section-tag">GET IN TOUCH</div>
+          <h2 class="section-title">Ready to <span class="accent">Begin?</span></h2>
+          <p>Fill out the form and our team will reach out within 2 hours to schedule your FREE consultation and facility tour.</p>
+
+          <div class="contact-details">
+            <div class="cd-item">
+              <span class="cd-icon">📍</span>
+              <div>
+                <strong>Location</strong>
+                <p>Plot 14, Vigyan Nagar, Kota, Rajasthan 324005</p>
+              </div>
+            </div>
+            <div class="cd-item">
+              <span class="cd-icon">📞</span>
+              <div>
+                <strong>Phone / WhatsApp</strong>
+                <p>+91 98765 43210</p>
+              </div>
+            </div>
+            <div class="cd-item">
+              <span class="cd-icon">✉️</span>
+              <div>
+                <strong>Email</strong>
+                <p>hello@ironpeakgym.in</p>
+              </div>
+            </div>
+            <div class="cd-item">
+              <span class="cd-icon">🕐</span>
+              <div>
+                <strong>Hours</strong>
+                <p>Mon–Sat: 5:00 AM – 11:00 PM<br />Sunday: 6:00 AM – 9:00 PM</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="google-map-placeholder">
+            <div class="map-inner">
+              <span>📍 IronPeak Gym, Vigyan Nagar, Kota</span>
+              <a href="https://maps.google.com" target="_blank" class="map-link">Open in Google Maps →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-wrapper reveal">
+          <div class="form-card">
+            <h3>Claim Your <span class="accent">Free Trial</span></h3>
+            <p class="form-sub">Zero risk. Zero commitment. Just results.</p>
+
+            <div id="form-success" class="form-success" style="display:none;">
+              <div class="success-icon">✅</div>
+              <h4>You're on your way!</h4>
+              <p>We've received your enquiry and our team will contact you within 2 hours. Get ready to transform.</p>
+            </div>
+
+            <form id="enquiryForm" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Full Name *</label>
+                  <input type="text" id="name" name="name" placeholder="Your full name" required />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone / WhatsApp *</label>
+                  <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="program">Interested Program</label>
+                  <select id="program" name="program">
+                    <option value="">Select a program</option>
+                    <option>Strength & Powerlifting</option>
+                    <option>Body Transformation</option>
+                    <option>Functional Fitness</option>
+                    <option>Combat & Conditioning</option>
+                    <option>Women's Empowerment</option>
+                    <option>Athletic Performance</option>
+                    <option>Not Sure — Need Guidance</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="goal">Primary Goal</label>
+                  <select id="goal" name="goal">
+                    <option value="">Select your goal</option>
+                    <option>Lose Weight / Fat Loss</option>
+                    <option>Build Muscle / Bulk</option>
+                    <option>Improve Fitness / Endurance</option>
+                    <option>Athletic Performance</option>
+                    <option>General Health & Wellness</option>
+                    <option>Injury Recovery / Rehab</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="preferred_date">Preferred Visit Date</label>
+                <input type="date" id="preferred_date" name="preferred_date" />
+              </div>
+              <div class="form-group">
+                <label for="message">Tell Us More (Optional)</label>
+                <textarea id="message" name="message" rows="3" placeholder="Any specific goals, injuries, or questions for our coaches..."></textarea>
+              </div>
+              <div class="form-consent">
+                <input type="checkbox" id="consent" name="consent" required />
+                <label for="consent">I agree to be contacted by IronPeak Gym about my enquiry. No spam, ever.</label>
+              </div>
+              <button type="submit" class="btn-primary btn-full" id="submitBtn">
+                <span id="btnText">BOOK MY FREE TRIAL →</span>
+                <span id="btnLoader" style="display:none;">Submitting...</span>
+              </button>
+              <p class="form-assurance">🔒 Your data is safe. We never share your information with third parties.</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#hero" class="logo">IRON<span>PEAK</span></a>
+          <p>Kota's premier high-performance training facility. Where champions are made every single day.</p>
+          <div class="social-links">
+            <a href="#" class="social-link">Instagram</a>
+            <a href="#" class="social-link">Facebook</a>
+            <a href="#" class="social-link">YouTube</a>
+            <a href="#" class="social-link">WhatsApp</a>
+          </div>
+        </div>
+        <div class="footer-links-group">
+          <h5>Quick Links</h5>
+          <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#programs">Programs</a></li>
+            <li><a href="#coaches">Our Coaches</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-group">
+          <h5>Programs</h5>
+          <ul>
+            <li><a href="#programs">Strength & Powerlifting</a></li>
+            <li><a href="#programs">Body Transformation</a></li>
+            <li><a href="#programs">Functional Fitness</a></li>
+            <li><a href="#programs">Combat & Conditioning</a></li>
+            <li><a href="#programs">Women's Empowerment</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-group">
+          <h5>Contact</h5>
+          <ul>
+            <li>📍 Vigyan Nagar, Kota</li>
+            <li>📞 +91 98765 43210</li>
+            <li>✉️ hello@ironpeakgym.in</li>
+            <li>🕐 Mon–Sun: 5AM – 11PM</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 IronPeak Gym. All Rights Reserved. | Designed for Champions.</p>
+        <p>Privacy Policy · Terms of Use</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
