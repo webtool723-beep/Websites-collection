@@ -613,7 +613,7 @@ async function initSupabase() {
     const today = new Date();
     today.setHours(0,0,0,0);
     await loadStoreStatus();
-    await loadStoreStatus();
+    await loadOutOfStock();
     const { data, error } = await supabaseClient
       .from('orders')
       .select('*')
@@ -850,7 +850,8 @@ function renderOrderCard(order) {
         <div class="order-meta">
           <div class="order-id">${order.order_id}</div>
           <div class="order-table">📍 Table ${order.table_no}</div>
-          <div class="order-time">📞 ${order.phone_no || 'N/A'}</div>
+          <div class="order-time">📅 ${date} &nbsp;⏱ ${time}</div>
+<div class="order-time">📞 ${order.phone_no || 'N/A'}</div>
         </div>
         ${statusBadge}
       </div>
