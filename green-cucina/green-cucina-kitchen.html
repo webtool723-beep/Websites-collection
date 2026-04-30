@@ -631,9 +631,7 @@ function updateClock() {
 // ═══════════════════════════════════════════
 async function initSupabase() {
   try {
-    if (!supabaseClient) {
     supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
 
     // Load today's orders
     const today = new Date();
@@ -664,7 +662,7 @@ async function initSupabase() {
     // Real-time subscription
     await supabaseClient.removeAllChannels();
   supabaseClient
-      .channel('orders-channel')
+      .channel('orders-' + Date.now())
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, (payload) => {
         receiveOrder(payload.new);
       })
