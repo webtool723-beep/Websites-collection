@@ -594,8 +594,10 @@ document.addEventListener('DOMContentLoaded', () => {
 }, 30000);
 
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && supabaseClient) {
-    initSupabase();
+  if (document.visibilityState === 'visible') {
+    if (!supabaseClient) {
+      initSupabase();
+    }
   }
 });
 
@@ -642,11 +644,18 @@ async function initSupabase() {
       .order('created_at', { ascending: false });
 
     if (!error && data) {
+      let hasNew = false;
       data.forEach(o => {
-        if (!orders.find(x => x.order_id === o.order_id)) orders.push(o);
+        if (!orders.find(x => x.order_id === o.order_id)) {
+          orders.push(o);
+          hasNew = true;
+        }
       });
-      renderOrders();
-      updateStats();
+      if (hasNew) {
+        orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        renderOrders();
+        updateStats();
+      }
     }
 
     // Real-time subscription
