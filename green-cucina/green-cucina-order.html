@@ -704,12 +704,14 @@ function renderMenu() {
 
 function renderCard(item) {
   const qty = cart[item.id] || 0;
+  const oos = OUT_OF_STOCK.includes(item.id);
   return `
-    <div class="menu-card" id="card-${item.id}">
+    <div class="menu-card" id="card-${item.id}" style="${oos ? 'opacity:0.45;pointer-events:none;' : ''}">
       <div class="card-emoji">${item.emoji}</div>
       <div class="card-body">
         <div class="card-name">${item.name}</div>
         <div class="card-desc">${item.desc}</div>
+        ${oos ? `<div style="background:#fee;color:#c00;font-size:0.75rem;font-weight:600;padding:5px 10px;border-radius:6px;margin-bottom:10px;display:inline-block;">❌ Out of Stock</div>` : ''}
         <div class="card-footer">
           <div class="card-price">₹${item.price} <span>per item</span></div>
           ${qty === 0
