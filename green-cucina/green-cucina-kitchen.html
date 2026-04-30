@@ -411,6 +411,9 @@
     <small>Kitchen Dashboard</small>
   </div>
   <div class="header-right">
+    <div id="audioWarning" style="background:#3a2f00;border:1px solid #ffc107;border-radius:8px;padding:6px 12px;font-size:0.78rem;color:#ffc107;cursor:pointer;" onclick="unlockAudio()" title="Click to enable sound">
+  🔇 Click to enable sound
+</div>
     <div class="live-dot">
       <div class="dot" id="liveDot"></div>
       <span id="liveStatus">Live</span>
@@ -945,23 +948,33 @@ function showBanner() {
 // ═══════════════════════════════════════════
 // SOUND + NOTIFICATIONS
 // ═══════════════════════════════════════════
+let audioUnlocked = false;
+
 function unlockAudio() {
+  if (audioUnlocked) return;
   const bell = document.getElementById('bellAudio');
   if (bell) {
     bell.volume = 0;
-    bell.play().then(() => { bell.pause(); bell.currentTime = 0; bell.volume = chimeVolume; }).catch(() => {});
+    bell.play().then(() => {
+      bell.pause();
+      bell.currentTime = 0;
+      bell.volume = chimeVolume;
+      audioUnlocked = true;
+      document.getElementById('audioWarning').style.display = 'none';
+    }).catch(() => {});
   }
-  document.removeEventListener('click', unlockAudio);
-  document.removeEventListener('touchstart', unlockAudio);
 }
+
 document.addEventListener('click', unlockAudio);
 document.addEventListener('touchstart', unlockAudio);
+document.addEventListener('keydown', unlockAudio);
 function playChime() {
   try {
+    if (!audioUnlocked) unlockAudio();
     const bell = document.getElementById('bellAudio');
     bell.volume = chimeVolume;
     bell.currentTime = 0;
-    bell.play();
+    bell.play().catch(() => {});
   } catch(e) {}
 }
 
