@@ -587,6 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (error) {
       document.getElementById('liveDot').classList.add('offline');
       document.getElementById('liveStatus').textContent = 'Reconnecting…';
+      supabaseClient = null;
       initSupabase();
     }
   }
@@ -625,7 +626,9 @@ function updateClock() {
 // ═══════════════════════════════════════════
 async function initSupabase() {
   try {
+    if (!supabaseClient) {
     supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
 
     // Load today's orders
     const today = new Date();
@@ -647,7 +650,8 @@ async function initSupabase() {
     }
 
     // Real-time subscription
-    supabaseClient
+    await supabaseClient.removeAllChannels();
+  supabaseClient
       .channel('orders-channel')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, (payload) => {
         receiveOrder(payload.new);
@@ -656,7 +660,7 @@ async function initSupabase() {
     if (status === 'SUBSCRIBED') {
       document.getElementById('liveDot').classList.remove('offline');
       document.getElementById('liveStatus').textContent = 'Live';
-    } else {
+    } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
       document.getElementById('liveDot').classList.add('offline');
       document.getElementById('liveStatus').textContent = 'Reconnecting…';
       setTimeout(() => initSupabase(), 5000);
