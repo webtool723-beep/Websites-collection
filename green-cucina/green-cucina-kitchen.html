@@ -581,6 +581,23 @@ document.addEventListener('DOMContentLoaded', () => {
   updateClock();
   setInterval(updateClock, 1000);
 
+  setInterval(async () => {
+  if (supabaseClient) {
+    const { error } = await supabaseClient.from('settings').select('key').limit(1);
+    if (error) {
+      document.getElementById('liveDot').classList.add('offline');
+      document.getElementById('liveStatus').textContent = 'Reconnecting…';
+      initSupabase();
+    }
+  }
+}, 30000);
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && supabaseClient) {
+    initSupabase();
+  }
+});
+
   if (SUPABASE_URL === 'YOUR_SUPABASE_URL') {
     document.getElementById('configBanner').style.display = 'block';
     document.getElementById('liveDot').classList.add('offline');
@@ -636,14 +653,15 @@ async function initSupabase() {
         receiveOrder(payload.new);
       })
       .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          document.getElementById('liveDot').classList.remove('offline');
-          document.getElementById('liveStatus').textContent = 'Live';
-        } else {
-          document.getElementById('liveDot').classList.add('offline');
-          document.getElementById('liveStatus').textContent = 'Reconnecting…';
-        }
-      });
+    if (status === 'SUBSCRIBED') {
+      document.getElementById('liveDot').classList.remove('offline');
+      document.getElementById('liveStatus').textContent = 'Live';
+    } else {
+      document.getElementById('liveDot').classList.add('offline');
+      document.getElementById('liveStatus').textContent = 'Reconnecting…';
+      setTimeout(() => initSupabase(), 5000);
+    }
+  });
 
   } catch(e) { console.error('Supabase error:', e); }
 }
@@ -914,6 +932,17 @@ function showBanner() {
 // ═══════════════════════════════════════════
 // SOUND + NOTIFICATIONS
 // ═══════════════════════════════════════════
+function unlockAudio() {
+  const bell = document.getElementById('bellAudio');
+  if (bell) {
+    bell.volume = 0;
+    bell.play().then(() => { bell.pause(); bell.currentTime = 0; bell.volume = chimeVolume; }).catch(() => {});
+  }
+  document.removeEventListener('click', unlockAudio);
+  document.removeEventListener('touchstart', unlockAudio);
+}
+document.addEventListener('click', unlockAudio);
+document.addEventListener('touchstart', unlockAudio);
 function playChime() {
   try {
     const bell = document.getElementById('bellAudio');
