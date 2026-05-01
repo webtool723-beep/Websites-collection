@@ -6,6 +6,103 @@
 <title>Green Cucina — Order</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  // ── YOUR FIREBASE CONFIG ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyCaetYJOBQoL0c6Y1DdJN1m-PMxpCcuRc0",
+  authDomain: "green-cucina.firebaseapp.com",
+  projectId: "green-cucina",
+  storageBucket: "green-cucina.firebasestorage.app",
+  messagingSenderId: "810215846761",
+  appId: "1:810215846761:web:201d72b7f2aea201dbc3f8"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  window._firebaseAuth = auth;
+  window._googleProvider = googleProvider;
+  window._firebaseFns = { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup, updateProfile };
+
+  onAuthStateChanged(auth, (user) => {
+    window._currentUser = user;
+    const btn = document.getElementById('authHeaderBtn');
+    const userInfo = document.getElementById('headerUserInfo');
+    if (!btn) return;
+    if (user) {
+      btn.style.display = 'none';
+      userInfo.style.display = 'flex';
+      document.getElementById('headerUserName').textContent = user.displayName || user.email.split('@')[0];
+      const avatar = document.getElementById('headerAvatar');
+      avatar.textContent = (user.displayName || user.email)[0].toUpperCase();
+      if (typeof window.loadUserOrders === 'function') window.loadUserOrders();
+    } else {
+      btn.style.display = 'flex';
+      userInfo.style.display = 'none';
+    }
+  });
+
+  window.firebaseSignOut = async () => {
+    await window._firebaseFns.signOut(window._firebaseAuth);
+  };
+
+  window.authLogin = async () => {
+    const email = document.getElementById('authEmail').value.trim();
+    const pass = document.getElementById('authPass').value;
+    const errEl = document.getElementById('authError');
+    errEl.textContent = '';
+    try {
+      await window._firebaseFns.signInWithEmailAndPassword(window._firebaseAuth, email, pass);
+      closeAuthModal();
+    } catch(e) {
+      errEl.textContent = friendlyError(e.code);
+    }
+  };
+
+  window.authSignup = async () => {
+    const name = document.getElementById('authName').value.trim();
+    const email = document.getElementById('authEmail').value.trim();
+    const pass = document.getElementById('authPass').value;
+    const errEl = document.getElementById('authError');
+    errEl.textContent = '';
+    if (!name) { errEl.textContent = 'Please enter your name.'; return; }
+    try {
+      const cred = await window._firebaseFns.createUserWithEmailAndPassword(window._firebaseAuth, email, pass);
+      await window._firebaseFns.updateProfile(cred.user, { displayName: name });
+      closeAuthModal();
+    } catch(e) {
+      errEl.textContent = friendlyError(e.code);
+    }
+  };
+
+  window.authGoogle = async () => {
+    const errEl = document.getElementById('authError');
+    errEl.textContent = '';
+    try {
+      await window._firebaseFns.signInWithPopup(window._firebaseAuth, window._googleProvider);
+      closeAuthModal();
+    } catch(e) {
+      errEl.textContent = friendlyError(e.code);
+    }
+  };
+
+  function friendlyError(code) {
+    const map = {
+      'auth/invalid-email': 'Invalid email address.',
+      'auth/user-not-found': 'No account found with this email.',
+      'auth/wrong-password': 'Incorrect password.',
+      'auth/email-already-in-use': 'This email is already registered.',
+      'auth/weak-password': 'Password must be at least 6 characters.',
+      'auth/popup-closed-by-user': 'Google sign-in was cancelled.',
+    };
+    return map[code] || 'Something went wrong. Please try again.';
+  }
+</script>
 <style>
   :root {
     --green-dark: #1a2e1a;
@@ -468,6 +565,128 @@
     .categories { padding: 16px 16px 8px; }
     .table-bar { padding: 12px 16px; }
   }
+
+  /* AUTH MODAL */
+.auth-overlay {
+  position: fixed; inset: 0;
+  background: rgba(26,46,26,0.65);
+  z-index: 400;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.auth-overlay.show { opacity: 1; pointer-events: all; }
+.auth-card {
+  background: var(--warm-white);
+  border-radius: 24px;
+  padding: 36px 28px 28px;
+  max-width: 360px; width: 100%;
+  position: relative;
+  transform: scale(0.92);
+  transition: transform 0.3s;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+.auth-overlay.show .auth-card { transform: scale(1); }
+.auth-close {
+  position: absolute; top: 16px; right: 18px;
+  background: none; border: none;
+  font-size: 1.3rem; color: var(--text-light);
+  cursor: pointer;
+}
+.auth-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem; color: var(--green-dark);
+  text-align: center; margin-bottom: 4px;
+}
+.auth-logo span { color: var(--green-light); font-style: italic; }
+.auth-sub { text-align: center; font-size: 0.8rem; color: var(--text-light); margin-bottom: 22px; }
+.auth-tabs {
+  display: flex; border: 1.5px solid var(--border);
+  border-radius: 50px; overflow: hidden; margin-bottom: 22px;
+}
+.auth-tab {
+  flex: 1; padding: 9px 0;
+  text-align: center; font-size: 0.85rem; font-weight: 500;
+  cursor: pointer; transition: all 0.2s;
+  border: none; background: none; font-family: 'DM Sans', sans-serif;
+  color: var(--text-mid);
+}
+.auth-tab.active {
+  background: var(--green-dark); color: var(--cream);
+}
+.auth-name-wrap { display: none; }
+.auth-name-wrap.show { display: block; }
+.auth-input {
+  width: 100%; margin-bottom: 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 11px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem; background: white;
+  color: var(--text-dark); transition: border-color 0.2s;
+}
+.auth-input:focus { outline: none; border-color: var(--green-accent); }
+.auth-error {
+  color: #c00; font-size: 0.78rem;
+  min-height: 18px; margin-bottom: 8px;
+  text-align: center;
+}
+.auth-primary-btn {
+  width: 100%; padding: 13px;
+  background: var(--green-dark); color: var(--cream);
+  border: none; border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem; font-weight: 500;
+  cursor: pointer; transition: background 0.2s; margin-bottom: 12px;
+}
+.auth-primary-btn:hover { background: var(--green-accent); }
+.auth-divider {
+  text-align: center; font-size: 0.78rem;
+  color: var(--text-light); margin-bottom: 12px;
+  position: relative;
+}
+.auth-divider::before, .auth-divider::after {
+  content: ''; position: absolute; top: 50%;
+  width: 40%; height: 1px; background: var(--border);
+}
+.auth-divider::before { left: 0; }
+.auth-divider::after { right: 0; }
+.auth-google-btn {
+  width: 100%; padding: 11px;
+  background: white; color: var(--text-dark);
+  border: 1.5px solid var(--border);
+  border-radius: 50px; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: border-color 0.2s;
+}
+.auth-google-btn:hover { border-color: var(--green-accent); }
+/* Header user info */
+.header-user {
+  display: none; align-items: center; gap: 10px;
+}
+.header-avatar {
+  width: 32px; height: 32px;
+  background: var(--green-light);
+  color: var(--green-dark);
+  border-radius: 50%;
+  font-weight: 700; font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.header-username {
+  color: var(--cream); font-size: 0.85rem;
+  font-weight: 500; max-width: 90px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.header-logout {
+  background: rgba(255,255,255,0.12);
+  color: var(--cream); border: none;
+  border-radius: 50px; padding: 6px 12px;
+  font-size: 0.78rem; cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s;
+}
+.header-logout:hover { background: rgba(255,255,255,0.22); }
 </style>
 </head>
 <body>
@@ -480,10 +699,23 @@
 
 <header>
   <div class="logo">🌿 Green <span>Cucina</span></div>
-  <button class="cart-btn" onclick="toggleHistory()" style="background:#2d4a2d;margin-right:8px;">
-  📋 My Orders
-</button>
-  <button class="cart-btn" onclick="toggleCart()">
+
+  <!-- Auth: shown when logged out -->
+  <button class="cart-btn" id="authHeaderBtn" onclick="openAuthModal()" style="background:#2d4a2d;">
+    🔑 Login
+  </button>
+
+  <!-- User info: shown when logged in -->
+  <div class="header-user" id="headerUserInfo">
+    <div class="header-avatar" id="headerAvatar">?</div>
+    <span class="header-username" id="headerUserName"></span>
+    <button class="header-logout" onclick="firebaseSignOut()">Logout</button>
+  </div>
+
+  <button class="cart-btn" onclick="toggleHistory()" style="background:#2d4a2d;margin-left:8px;">
+    📋 My Orders
+  </button>
+  <button class="cart-btn" onclick="toggleCart()" style="margin-left:8px;">
     🛒 Your Order
     <span class="cart-count" id="cartCount">0</span>
   </button>
@@ -614,7 +846,38 @@
     <button class="success-close" onclick="closeSuccess()">Order More 🌿</button>
   </div>
 </div>
+<!-- Auth Modal -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <button class="auth-close" onclick="closeAuthModal()">✕</button>
+    <div class="auth-logo">🌿 Green <span>Cucina</span></div>
+    <div class="auth-sub">Sign in to track your orders</div>
 
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Login</button>
+      <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- Name (Sign Up only) -->
+    <div class="auth-name-wrap" id="authNameWrap">
+      <input class="auth-input" id="authName" type="text" placeholder="Your full name" />
+    </div>
+
+    <input class="auth-input" id="authEmail" type="email" placeholder="Email address" />
+    <input class="auth-input" id="authPass" type="password" placeholder="Password (min 6 chars)" />
+
+    <div class="auth-error" id="authError"></div>
+
+    <button class="auth-primary-btn" id="authSubmitBtn" onclick="authLogin()">Login</button>
+
+    <div class="auth-divider">or</div>
+
+    <button class="auth-google-btn" onclick="authGoogle()">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Continue with Google
+    </button>
+  </div>
+</div>
 <script>
 // ═══════════════════════════════════════════
 // MENU DATA (from Green Cucina website)
@@ -864,6 +1127,7 @@ async function placeOrder() {
     note: note,
     status: 'pending',
     created_at: new Date().toISOString(),
+    user_id: window._currentUser ? window._currentUser.uid : null,
   };
 
   let success = false;
@@ -889,14 +1153,16 @@ async function placeOrder() {
 
   if (success || true) { // always show success for UX
     orderHistory.unshift({
-    order_id: orderId,
-    table_no: tableNo,
-    phone_no: phoneNo,
-    items: items,
-    total: total,
-    note: note,
-    placed_at: new Date()
-  });
+      order_id: orderId,
+      table_no: tableNo,
+      phone_no: phoneNo,
+      items: items,
+      total: total,
+      note: note,
+      status: 'pending',
+      placed_at: new Date()
+    });
+    subscribeToOrderStatus(orderId);
     cart = {};
     updateCartUI();
     toggleCart();
@@ -924,6 +1190,97 @@ function downloadBill(orderId, tableNo, phoneNo, items, total) {
   window.print();
   document.getElementById('billTemplate').style.display = 'none';
 }
+// ═══════════════════════════════════════════
+// LOAD USER ORDER HISTORY FROM SUPABASE
+// ═══════════════════════════════════════════
+window.loadUserOrders = async function() {
+  if (!supabaseClient || !window._currentUser) return;
+  const { data, error } = await supabaseClient
+    .from('orders')
+    .select('*')
+    .eq('user_id', window._currentUser.uid)
+    .order('created_at', { ascending: false });
+  if (error) { console.error('Load orders error:', error); return; }
+  if (!data || data.length === 0) return;
+
+  const existingIds = new Set(orderHistory.map(o => o.order_id));
+  data.forEach(o => {
+    if (existingIds.has(o.order_id)) {
+      // Just update status of orders already in session memory
+      const existing = orderHistory.find(h => h.order_id === o.order_id);
+      if (existing) existing.status = o.status;
+    } else {
+      // Pull in past orders from previous sessions
+      orderHistory.push({
+        order_id: o.order_id,
+        table_no: o.table_no,
+        phone_no: o.phone_no,
+        items: o.items,
+        total: o.total,
+        note: o.note,
+        status: o.status,
+        placed_at: new Date(o.created_at)
+      });
+    }
+  });
+
+  // Sort newest first
+  orderHistory.sort((a, b) => {
+    const aT = a.placed_at instanceof Date ? a.placed_at : new Date(a.placed_at);
+    const bT = b.placed_at instanceof Date ? b.placed_at : new Date(b.placed_at);
+    return bT - aT;
+  });
+
+  // Subscribe to real-time updates for active orders
+  orderHistory
+    .filter(o => o.status === 'pending' || o.status === 'preparing')
+    .forEach(o => subscribeToOrderStatus(o.order_id));
+};
+
+// ═══════════════════════════════════════════
+// REAL-TIME STATUS LISTENER FOR AN ORDER
+// ═══════════════════════════════════════════
+const _subscribedOrders = new Set();
+function subscribeToOrderStatus(orderId) {
+  if (!supabaseClient || _subscribedOrders.has(orderId)) return;
+  _subscribedOrders.add(orderId);
+  supabaseClient
+    .channel('ord-' + orderId)
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'orders',
+      filter: `order_id=eq.${orderId}`
+    }, (payload) => {
+      const newStatus = payload.new.status;
+      const order = orderHistory.find(o => o.order_id === orderId);
+      if (order) {
+        order.status = newStatus;
+        if (document.getElementById('historyDrawer').classList.contains('open')) renderHistory();
+        const msgs = {
+          preparing: { icon: '🔵', msg: 'Your order is confirmed & being prepared!' },
+          done:      { icon: '✅', msg: 'Your order is ready! Please collect.' },
+          rejected:  { icon: '❌', msg: 'Your order was cancelled by kitchen.' }
+        };
+        if (msgs[newStatus]) showStatusToast(msgs[newStatus].icon, orderId, msgs[newStatus].msg);
+      }
+    })
+    .subscribe();
+}
+
+function showStatusToast(icon, orderId, msg) {
+  const toast = document.createElement('div');
+  toast.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    background:var(--green-dark);color:var(--cream);border-radius:14px;padding:14px 20px;
+    font-family:'DM Sans',sans-serif;font-size:0.88rem;z-index:9999;
+    box-shadow:0 6px 24px rgba(0,0,0,0.35);display:flex;align-items:center;
+    gap:12px;max-width:300px;animation:slideUp 0.3s ease;`;
+  toast.innerHTML = `<span style="font-size:1.6rem;">${icon}</span>
+    <div><div style="font-weight:600;margin-bottom:2px;">${msg}</div>
+    <div style="font-size:0.75rem;opacity:0.65;">${orderId}</div></div>`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 6000);
+}
 function toggleHistory() {
   const overlay = document.getElementById('historyOverlay');
   const drawer = document.getElementById('historyDrawer');
@@ -936,37 +1293,79 @@ function toggleHistory() {
 function renderHistory() {
   const el = document.getElementById('historyItems');
   if (orderHistory.length === 0) {
-    el.innerHTML = `<div class="empty-cart"><div class="empty-icon">📋</div><div>No orders yet this session</div></div>`;
+    el.innerHTML = `<div class="empty-cart"><div class="empty-icon">📋</div><div>No orders yet${window._currentUser ? '' : ' — Login to see past orders'}</div></div>`;
     return;
   }
-  el.innerHTML = orderHistory.map(order => `
-    <div style="padding:14px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-        <span style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--text-light);">${order.order_id}</span>
-        <span style="font-size:0.78rem;color:var(--text-light);">
-          ${order.placed_at.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}
-        </span>
+  el.innerHTML = orderHistory.map(order => {
+    const statusConfig = {
+      pending:   { label: '⏳ Pending — Waiting for kitchen', color: '#856404', bg: '#fffbf0' },
+      preparing: { label: '🔵 Confirmed & Preparing', color: '#0c4a8a', bg: '#eff6ff' },
+      done:      { label: '✅ Order Completed', color: '#166534', bg: '#f0fdf4' },
+      rejected:  { label: '❌ Cancelled by Kitchen', color: '#991b1b', bg: '#fef2f2' },
+    };
+    const sc = statusConfig[order.status] || statusConfig.pending;
+    const isDone = order.status === 'done';
+    const isCancelled = order.status === 'rejected';
+    const placedAt = order.placed_at instanceof Date ? order.placed_at : new Date(order.placed_at);
+    return `
+      <div style="padding:14px 0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--text-light);">${order.order_id}</span>
+          <span style="font-size:0.78rem;color:var(--text-light);">
+            ${placedAt.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}
+            · ${placedAt.toLocaleDateString('en-IN', { day:'2-digit', month:'short' })}
+          </span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--text-mid);margin-bottom:8px;">📍 Table ${order.table_no} &nbsp;📞 ${order.phone_no}</div>
+        <div style="background:${sc.bg};color:${sc.color};border-radius:8px;padding:7px 12px;font-size:0.8rem;font-weight:600;margin-bottom:8px;">${sc.label}</div>
+        ${!isCancelled ? order.items.map(i => `
+          <div style="display:flex;justify-content:space-between;font-size:0.85rem;padding:3px 0;">
+            <span>${i.emoji} ${i.name} ×${i.qty}</span>
+            <span>₹${i.price * i.qty}</span>
+          </div>`).join('') : '<div style="font-size:0.82rem;color:var(--text-light);font-style:italic;">Order was not prepared.</div>'}
+        ${order.note ? `<div style="font-size:0.78rem;color:var(--text-light);margin-top:5px;font-style:italic;">📝 ${order.note}</div>` : ''}
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+          ${isDone ? `<span style="font-weight:600;color:var(--green-dark);">Total: ₹${order.total}</span>` : `<span></span>`}
+          ${isDone ? `<button onclick="downloadBill('${order.order_id}','${order.table_no}','${order.phone_no}',orderHistory.find(o=>o.order_id==='${order.order_id}').items,${order.total})"
+            style="background:var(--green-dark);color:var(--cream);border:none;border-radius:50px;padding:6px 14px;font-size:0.78rem;cursor:pointer;">⬇ Bill</button>` : ''}
+        </div>
       </div>
-      <div style="font-size:0.82rem;color:var(--text-mid);margin-bottom:6px;">📍 Table ${order.table_no} &nbsp;📞 ${order.phone_no}</div>
-      ${order.items.map(i => `
-        <div style="display:flex;justify-content:space-between;font-size:0.85rem;padding:3px 0;">
-          <span>${i.emoji} ${i.name} ×${i.qty}</span>
-          <span>₹${i.price * i.qty}</span>
-        </div>`).join('')}
-      ${order.note ? `<div style="font-size:0.78rem;color:var(--text-light);margin-top:5px;font-style:italic;">📝 ${order.note}</div>` : ''}
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
-        <span style="font-weight:600;color:var(--green-dark);">Total: ₹${order.total}</span>
-        <button onclick="downloadBill('${order.order_id}','${order.table_no}','${order.phone_no}',orderHistory.find(o=>o.order_id==='${order.order_id}').items,${order.total})"
-          style="background:var(--green-dark);color:var(--cream);border:none;border-radius:50px;padding:6px 14px;font-size:0.78rem;cursor:pointer;">
-          ⬇ Bill
-        </button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 function closeSuccess() {
   document.getElementById('successModal').classList.remove('show');
 }
+
+// ═══════════════════════════════════════════
+// AUTH MODAL LOGIC
+// ═══════════════════════════════════════════
+let _authMode = 'login';
+
+function openAuthModal() {
+  document.getElementById('authOverlay').classList.add('show');
+  document.getElementById('authError').textContent = '';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPass').value = '';
+  document.getElementById('authName').value = '';
+}
+function closeAuthModal() {
+  document.getElementById('authOverlay').classList.remove('show');
+}
+function switchAuthTab(mode) {
+  _authMode = mode;
+  document.getElementById('authError').textContent = '';
+  document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+  document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
+  document.getElementById('authNameWrap').classList.toggle('show', mode === 'signup');
+  const btn = document.getElementById('authSubmitBtn');
+  btn.textContent = mode === 'login' ? 'Login' : 'Create Account';
+  btn.onclick = mode === 'login' ? authLogin : authSignup;
+}
+// Close on backdrop click
+document.getElementById('authOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeAuthModal();
+});
 </script>
 </body>
 </html>
