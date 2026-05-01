@@ -33,6 +33,7 @@
     window._currentUser = user;
     const btn = document.getElementById('authHeaderBtn');
     const userInfo = document.getElementById('headerUserInfo');
+    const guestBanner = document.getElementById('guestWarningBanner');
     if (!btn) return;
     if (user) {
       btn.style.display = 'none';
@@ -40,10 +41,12 @@
       document.getElementById('headerUserName').textContent = user.displayName || user.email.split('@')[0];
       const avatar = document.getElementById('headerAvatar');
       avatar.textContent = (user.displayName || user.email)[0].toUpperCase();
+      if (guestBanner) guestBanner.style.display = 'none';
       if (typeof window.loadUserOrders === 'function') window.loadUserOrders();
     } else {
       btn.style.display = 'flex';
       userInfo.style.display = 'none';
+      if (guestBanner) guestBanner.style.display = 'flex';
     }
   });
 
@@ -773,6 +776,18 @@
     <button class="place-order-btn" id="placeOrderBtn" onclick="placeOrder()">
       🌿 Place Order
     </button>
+  </div>
+</div>
+
+<!-- Guest Warning Banner -->
+<div id="guestWarningBanner" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:500;
+  background:linear-gradient(135deg,#2a1a00,#3a2500); border-top:1px solid #ffc10750;
+  padding:12px 20px; font-family:'DM Sans',sans-serif; font-size:0.83rem; color:#ffc107;
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+  <span>⚠️ You're ordering as a <strong>Guest</strong> — order history won't be saved. <span style="color:#e8d5a0;opacity:0.75;">Sign in to track your orders.</span></span>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <button onclick="openAuthModal()" style="background:#ffc107;color:#1a1000;border:none;border-radius:8px;padding:6px 14px;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Sign In</button>
+    <button onclick="document.getElementById('guestWarningBanner').style.display='none'" style="background:none;border:none;color:#ffc10790;font-size:1rem;cursor:pointer;padding:4px 6px;">✕</button>
   </div>
 </div>
 
