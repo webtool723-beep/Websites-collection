@@ -7,6 +7,148 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<!-- Firebase Auth -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, sendEmailVerification, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  // ══════════════════════════════════════════════
+  // 🔥 FIREBASE CONFIG — replace with YOUR values
+  // ══════════════════════════════════════════════
+  const firebaseConfig = {
+    apiKey:            "YOUR_API_KEY",
+    authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId:         "YOUR_PROJECT_ID",
+    storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId:             "YOUR_APP_ID"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // ── expose helpers to global scope ──
+  window._firebaseAuth = auth;
+  window._fbSignIn = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  window._fbSignOut = () => signOut(auth);
+  window._fbSendVerification = (user) => sendEmailVerification(user);
+  window._fbPasswordReset = (email) => sendPasswordResetEmail(auth, email);
+
+  // ── Auth state gate ──
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      if (user.emailVerified) {
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('appShell').style.display    = 'block';
+        document.getElementById('authUserEmail').textContent = user.email;
+        // Now kick off the app
+        if (typeof window.appInit === 'function') window.appInit();
+      } else {
+        // Signed in but email not verified
+        showVerifyScreen(user);
+      }
+    } else {
+      showLoginScreen();
+    }
+  });
+
+  function showLoginScreen() {
+    document.getElementById('authOverlay').style.display = 'flex';
+    document.getElementById('appShell').style.display    = 'none';
+    document.getElementById('loginBox').style.display    = 'block';
+    document.getElementById('verifyBox').style.display   = 'none';
+  }
+
+  function showVerifyScreen(user) {
+    document.getElementById('authOverlay').style.display = 'flex';
+    document.getElementById('appShell').style.display    = 'none';
+    document.getElementById('loginBox').style.display    = 'none';
+    document.getElementById('verifyBox').style.display   = 'block';
+    document.getElementById('verifyEmail').textContent   = user.email;
+  }
+
+  // ── Login form handler ──
+  window.handleLogin = async function() {
+    const email    = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errEl    = document.getElementById('loginError');
+    const btn      = document.getElementById('loginBtn');
+    errEl.textContent = '';
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+    try {
+      const cred = await window._fbSignIn(email, password);
+      if (!cred.user.emailVerified) {
+        await window._fbSendVerification(cred.user);
+        showVerifyScreen(cred.user);
+      }
+      // onAuthStateChanged will handle the rest
+    } catch (e) {
+      errEl.textContent = friendlyError(e.code);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+    }
+  };
+
+  // ── Resend verification ──
+  window.resendVerification = async function() {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+      await window._fbSendVerification(user);
+      document.getElementById('verifyMsg').textContent = '✅ Verification email resent! Check your inbox.';
+    } catch(e) {
+      document.getElementById('verifyMsg').textContent = '⚠️ ' + friendlyError(e.code);
+    }
+  };
+
+  // ── Reload after verifying ──
+  window.checkVerified = async function() {
+    const user = auth.currentUser;
+    if (!user) return;
+    await user.reload();
+    if (user.emailVerified) {
+      document.getElementById('authOverlay').style.display = 'none';
+      document.getElementById('appShell').style.display    = 'block';
+      document.getElementById('authUserEmail').textContent = user.email;
+      if (typeof window.appInit === 'function') window.appInit();
+    } else {
+      document.getElementById('verifyMsg').textContent = '⚠️ Email not verified yet. Please check your inbox.';
+    }
+  };
+
+  // ── Forgot password ──
+  window.handleForgotPassword = async function() {
+    const email = document.getElementById('loginEmail').value.trim();
+    if (!email) { document.getElementById('loginError').textContent = 'Enter your email first.'; return; }
+    try {
+      await window._fbPasswordReset(email);
+      document.getElementById('loginError').style.color = '#66bb6a';
+      document.getElementById('loginError').textContent = '✅ Password reset email sent!';
+    } catch(e) {
+      document.getElementById('loginError').style.color = '#f44336';
+      document.getElementById('loginError').textContent = friendlyError(e.code);
+    }
+  };
+
+  // ── Sign out ──
+  window.handleSignOut = async function() {
+    await window._fbSignOut();
+  };
+
+  function friendlyError(code) {
+    const map = {
+      'auth/user-not-found':       'No account found with this email.',
+      'auth/wrong-password':       'Incorrect password.',
+      'auth/invalid-email':        'Invalid email address.',
+      'auth/too-many-requests':    'Too many attempts. Please wait a moment.',
+      'auth/invalid-credential':   'Invalid email or password.',
+      'auth/network-request-failed': 'Network error. Check your internet.',
+    };
+    return map[code] || 'Something went wrong. Please try again.';
+  }
+</script>
 <style>
   :root {
     --bg: #0f1a0f;
@@ -405,6 +547,100 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpZm9ocWFjZWF1ZnhseWZ3cGdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzgyNjcsImV4cCI6MjA5MzA1NDI2N30.yx3jrNHPUuBw2960anvnAzVkDvDGBnuq01NbFkXJ_TM';
 </script>
 
+<!-- ══════════════════════════════════════════════
+     AUTH OVERLAY  (shown while not logged in)
+     ══════════════════════════════════════════════ -->
+<div id="authOverlay" style="
+  display:flex; align-items:center; justify-content:center;
+  position:fixed; inset:0; z-index:9999;
+  background:linear-gradient(135deg,#0a120a 0%,#0f1a0f 60%,#122012 100%);
+  font-family:'DM Sans',sans-serif;">
+
+  <!-- LOGIN BOX -->
+  <div id="loginBox" style="
+    background:#162016; border:1px solid #2a3d2a; border-radius:20px;
+    padding:40px 36px; width:100%; max-width:400px; margin:24px;">
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="font-size:2.5rem;margin-bottom:8px;">🌿</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:#e8f5e9;">Green <em style='color:#66bb6a;font-style:italic;'>Cucina</em></div>
+      <div style="font-size:0.75rem;color:#4a6b4a;letter-spacing:1px;text-transform:uppercase;margin-top:4px;">Kitchen Dashboard</div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <label style="font-size:0.75rem;color:#81c784;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Email</label>
+      <input id="loginEmail" type="email" placeholder="you@greencucina.com"
+        onkeydown="if(event.key==='Enter')document.getElementById('loginPassword').focus()"
+        style="width:100%;background:#1e2e1e;border:1px solid #2a3d2a;border-radius:10px;padding:12px 14px;color:#e8f5e9;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;"
+        onfocus="this.style.borderColor='#4caf50'" onblur="this.style.borderColor='#2a3d2a'"/>
+    </div>
+
+    <div style="margin-bottom:8px;">
+      <label style="font-size:0.75rem;color:#81c784;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Password</label>
+      <input id="loginPassword" type="password" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter')handleLogin()"
+        style="width:100%;background:#1e2e1e;border:1px solid #2a3d2a;border-radius:10px;padding:12px 14px;color:#e8f5e9;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;"
+        onfocus="this.style.borderColor='#4caf50'" onblur="this.style.borderColor='#2a3d2a'"/>
+    </div>
+
+    <div style="text-align:right;margin-bottom:20px;">
+      <button onclick="handleForgotPassword()"
+        style="background:none;border:none;color:#4a6b4a;font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;">
+        Forgot password?
+      </button>
+    </div>
+
+    <div id="loginError" style="font-size:0.82rem;text-align:center;min-height:20px;margin-bottom:12px;color:#f44336;"></div>
+
+    <button id="loginBtn" onclick="handleLogin()" style="
+      width:100%;background:#2d5a2d;border:1px solid #4caf50;border-radius:12px;
+      padding:13px;color:#66bb6a;font-family:'DM Sans',sans-serif;font-weight:600;
+      font-size:0.95rem;cursor:pointer;"
+      onmouseover="this.style.background='#3a6e3a'" onmouseout="this.style.background='#2d5a2d'">
+      Sign In
+    </button>
+
+    <div style="margin-top:20px;padding:14px;background:#1a1500;border:1px solid #ffc10730;border-radius:10px;font-size:0.78rem;color:#ffc107;line-height:1.6;">
+      🔒 Only verified email accounts can access the dashboard.
+    </div>
+  </div>
+
+  <!-- VERIFY BOX -->
+  <div id="verifyBox" style="display:none;
+    background:#162016; border:1px solid #2a3d2a; border-radius:20px;
+    padding:40px 36px; width:100%; max-width:400px; margin:24px; text-align:center;">
+    <div style="font-size:3rem;margin-bottom:16px;">📧</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#e8f5e9;margin-bottom:8px;">Verify Your Email</div>
+    <div style="font-size:0.85rem;color:#81c784;margin-bottom:6px;">We sent a link to:</div>
+    <div id="verifyEmail" style="font-family:'DM Mono',monospace;font-size:0.85rem;color:#ffc107;margin-bottom:20px;word-break:break-all;"></div>
+    <div style="font-size:0.82rem;color:#4a6b4a;margin-bottom:24px;line-height:1.6;">
+      Click the link in the email, then press <strong style="color:#81c784;">I've Verified</strong>.
+    </div>
+    <button onclick="checkVerified()" style="
+      width:100%;background:#2d5a2d;border:1px solid #4caf50;border-radius:12px;
+      padding:12px;color:#66bb6a;font-family:'DM Sans',sans-serif;font-weight:600;
+      font-size:0.9rem;cursor:pointer;margin-bottom:12px;">
+      ✅ I've Verified My Email
+    </button>
+    <button onclick="resendVerification()" style="
+      width:100%;background:#1e2e1e;border:1px solid #2a3d2a;border-radius:12px;
+      padding:12px;color:#81c784;font-family:'DM Sans',sans-serif;font-size:0.85rem;
+      cursor:pointer;margin-bottom:12px;">
+      🔁 Resend Verification Email
+    </button>
+    <button onclick="handleSignOut()" style="
+      background:none;border:none;color:#4a6b4a;font-size:0.8rem;
+      cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;">
+      ← Back to Login
+    </button>
+    <div id="verifyMsg" style="margin-top:14px;font-size:0.82rem;color:#81c784;min-height:20px;"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     APP SHELL  (hidden until authenticated + verified)
+     ══════════════════════════════════════════════ -->
+<div id="appShell" style="display:none;">
+
 <header>
   <div class="logo">
     🌿 Green <span>Cucina</span>
@@ -431,6 +667,10 @@
 </div>
 <button class="notif-btn" onclick="showDailySummary()">📊 Daily Summary</button>
 <button class="notif-btn" onclick="requestNotifPermission()">🔔 Alerts</button>
+    <div style="display:flex;align-items:center;gap:8px;border-left:1px solid #2a3d2a;padding-left:14px;margin-left:4px;">
+      <span id="authUserEmail" style="font-size:0.75rem;color:#4a6b4a;font-family:'DM Mono',monospace;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+      <button onclick="handleSignOut()" style="background:#1e2e1e;border:1px solid #3a0f0f;border-radius:8px;padding:6px 12px;color:#e57373;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;" title="Sign Out">⏏ Sign Out</button>
+    </div>
   </div>
 </header>
 
@@ -578,31 +818,34 @@ let supabaseClient = null;
 let notifGranted = false;
 
 // ═══════════════════════════════════════════
-// INIT
+// INIT  (called by Firebase auth on verified login)
 // ═══════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
+let appInitialized = false;
+
+window.appInit = function() {
+  if (appInitialized) return;
+  appInitialized = true;
+
   updateClock();
   setInterval(updateClock, 1000);
 
   setInterval(async () => {
-  if (supabaseClient) {
-    const { error } = await supabaseClient.from('settings').select('key').limit(1);
-    if (error) {
-      document.getElementById('liveDot').classList.add('offline');
-      document.getElementById('liveStatus').textContent = 'Reconnecting…';
-      supabaseClient = null;
-      initSupabase();
+    if (supabaseClient) {
+      const { error } = await supabaseClient.from('settings').select('key').limit(1);
+      if (error) {
+        document.getElementById('liveDot').classList.add('offline');
+        document.getElementById('liveStatus').textContent = 'Reconnecting…';
+        supabaseClient = null;
+        initSupabase();
+      }
     }
-  }
-}, 30000);
+  }, 30000);
 
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
-    if (!supabaseClient) {
-      initSupabase();
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      if (!supabaseClient) initSupabase();
     }
-  }
-});
+  });
 
   if (SUPABASE_URL === 'YOUR_SUPABASE_URL') {
     document.getElementById('configBanner').style.display = 'block';
@@ -619,7 +862,7 @@ document.addEventListener('visibilitychange', () => {
       receiveOrder(e.data);
     };
   } catch(e) {}
-});
+}; // end window.appInit
 
 function updateClock() {
   const now = new Date();
@@ -1087,5 +1330,6 @@ async function requestNotifPermission() {
   }
 }
 </script>
+</div><!-- end #appShell -->
 </body>
 </html>
