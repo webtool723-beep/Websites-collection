@@ -547,15 +547,33 @@
 <!-- Bill Template (hidden, for print only) -->
 <div id="billTemplate" style="display:none">
 <style id="billStyles">
+@page {
+  size: auto;          /* key: let page height = content height */
+  margin: 12mm;        /* uniform margin from all 4 sides */
+}
+
 @media print {
+  html, body {
+    height: auto !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
   body > * { display: none !important; }
   #billTemplate { display: block !important; }
 }
+
+@page {
+  size: auto;          /* page height = content only, no blank space */
+  margin: 14mm 12mm;   /* 14mm top & bottom, 12mm left & right */
+}
+
 #billTemplate {
   font-family: 'DM Sans', sans-serif;
-  max-width: 360px;
-  margin: 0 auto;
-  padding: 32px 28px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
   color: #000;
   background: #fff;
 }
