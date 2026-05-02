@@ -1222,13 +1222,25 @@ function printOrder(orderId) {
   if (!order) return;
 
   const dt = new Date(order.created_at);
+  const yy = dt.getFullYear().toString().slice(-2);
+  const mm = String(dt.getMonth() + 1).padStart(2, '0');
+  const invoiceNo = `INV-${yy}${mm}-${order.order_id.replace('GC-', '')}`;
+  const subtotal = order.total || 0;
+  const cgst = Math.round(subtotal * 0.025 * 100) / 100;
+  const sgst = Math.round(subtotal * 0.025 * 100) / 100;
+  const grandTotal = subtotal + cgst + sgst;
+
+  document.getElementById('psInvoiceNo').textContent = invoiceNo;
   document.getElementById('psOrderId').textContent = order.order_id;
   document.getElementById('psTable').textContent = order.table_no;
   document.getElementById('psPhone').textContent = order.phone_no || 'N/A';
   document.getElementById('psDate').textContent = dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
   document.getElementById('psTime').textContent = dt.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
   document.getElementById('psStatus').textContent = order.status.toUpperCase();
-  document.getElementById('psTotal').textContent = '₹' + order.total;
+  document.getElementById('psSubtotal').textContent = '₹' + subtotal.toFixed(2);
+  document.getElementById('psCGST').textContent = '₹' + cgst.toFixed(2);
+  document.getElementById('psSGST').textContent = '₹' + sgst.toFixed(2);
+  document.getElementById('psTotal').textContent = '₹' + grandTotal.toFixed(2);
   document.getElementById('psNote').textContent = order.note ? '📝 ' + order.note : '';
 
   const items = Array.isArray(order.items) ? order.items : [];
@@ -1476,7 +1488,9 @@ async function saveEditedOrder() {
 <div id="printSlip">
   <h2>🌿 Green Cucina</h2>
   <div class="ps-sub">Farm-to-table Café, Kota, Rajasthan</div>
+  <div class="ps-meta"><strong>GSTIN:</strong> 08AABCG1234D1ZQ</div> <!-----GST NUMBER ----------->
   <hr class="ps-divider"/>
+  <div class="ps-meta"><strong>Invoice No:</strong> <span id="psInvoiceNo"></span></div>
   <div class="ps-meta"><strong>Order ID:</strong> <span id="psOrderId"></span></div>
   <div class="ps-meta"><strong>Table No:</strong> <span id="psTable"></span></div>
   <div class="ps-meta"><strong>Phone:</strong> <span id="psPhone"></span></div>
@@ -1486,7 +1500,11 @@ async function saveEditedOrder() {
   <hr class="ps-divider"/>
   <div id="psItems"></div>
   <hr class="ps-divider"/>
-  <div class="ps-row ps-total"><span>Total</span><span id="psTotal"></span></div>
+  <div class="ps-row"><span>Subtotal</span><span id="psSubtotal"></span></div>
+<div class="ps-row"><span>CGST @ 2.5%</span><span id="psCGST"></span></div>
+<div class="ps-row"><span>SGST @ 2.5%</span><span id="psSGST"></span></div>
+<hr class="ps-divider"/>
+<div class="ps-row ps-total"><span>Grand Total</span><span id="psTotal"></span></div>
   <div class="ps-row"><span id="psNote"></span></div>
   <hr class="ps-divider"/>
   <div class="ps-foot">Payment at counter · Thank you 🌿</div>
