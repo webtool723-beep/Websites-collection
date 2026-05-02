@@ -211,6 +211,7 @@
     margin-top: 2.5rem;
     animation: fadeUp 0.6s 0.3s ease both;
     flex-wrap: wrap;
+    align-items: center;
   }
 
   .btn-primary {
@@ -319,6 +320,7 @@
   .section-inner {
     max-width: 1200px;
     margin: 0 auto;
+    overflow-x: hidden;
   }
 
   .section-eyebrow {
@@ -365,10 +367,20 @@
     align-items: start;
   }
 
+  .split-layout > * { min-width: 0; }
+
   @media (max-width: 900px) {
-    .split-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .split-layout { grid-template-columns: 1fr; gap: 2.5rem; }
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
+    section { padding: 4.5rem 1.2rem; }
+    .cta-band { padding: 4.5rem 1.2rem; }
+    .hero { padding: 7rem 1.2rem 3rem; }
+    .hero-stats { gap: 1.5rem 2.5rem; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; align-items: center; text-align: center; }
+    .how-grid { grid-template-columns: 1fr 1fr; }
+    .how-step { border-right: none; }
+    .how-step:nth-child(odd) { border-right: 1px solid var(--glass-border); }
   }
 
   /* ── FEATURE CARDS GRID ── */
@@ -445,6 +457,8 @@
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    min-width: 0;
+    width: 100%;
   }
 
   .mock-header {
@@ -454,6 +468,25 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
+    overflow: hidden;
+  }
+
+  .auth-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(90,171,232,0.1);
+    border: 1px solid rgba(90,171,232,0.2);
+    border-radius: 2rem;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.68rem;
+    color: var(--sky);
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+    flex-shrink: 1;
   }
 
   .mock-dot { width: 10px; height: 10px; border-radius: 50%; }
@@ -482,6 +515,7 @@
     border-radius: 10px;
     margin-bottom: 0.6rem;
     font-size: 0.78rem;
+    flex-wrap: wrap;
   }
 
   .order-thumb {
@@ -735,14 +769,45 @@
   .big-feature.reverse > * { direction: ltr; }
 
   @media (max-width: 900px) {
-    .big-feature { grid-template-columns: 1fr; gap: 2.5rem; }
+    .big-feature { grid-template-columns: 1fr; gap: 2.5rem; padding: 3rem 0; }
     .big-feature.reverse { direction: ltr; }
     .features-grid { grid-template-columns: 1fr 1fr; }
   }
 
   @media (max-width: 600px) {
     .features-grid { grid-template-columns: 1fr; }
-    .stats-row { grid-template-columns: repeat(3,1fr); }
+    .stats-row { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+    .stat-chip { padding: 0.4rem 0.3rem; }
+    .stat-chip strong { font-size: 1rem; }
+    .hero-stats { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 1.2rem 2rem; }
+    .stat-number { font-size: 2.2rem; }
+    .how-grid { grid-template-columns: 1fr; }
+    .how-step { border-right: none !important; }
+    .cart-footer { flex-wrap: wrap; gap: 0.6rem; }
+    .cart-footer > div:last-child { width: 100%; justify-content: flex-end; }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 2.6rem; }
+    .hero-badge { font-size: 0.65rem; padding: 0.35rem 0.8rem; }
+    .hero-actions { flex-direction: column; align-items: center; }
+    .hero-actions .btn-primary, .hero-actions .btn-ghost { width: 100%; text-align: center; }
+    .order-item { flex-wrap: wrap; gap: 0.5rem; }
+    .order-item .order-info { flex: 1 1 calc(100% - 52px); }
+    .order-item .qty-ctrl { margin-left: auto; }
+    .order-item .order-price { margin-left: auto; }
+    .mock-header { padding: 0.6rem 0.8rem; }
+    .mock-title { font-size: 0.62rem; }
+    .ko-actions { flex-wrap: wrap; }
+    .ko-btn { flex: 1 1 45%; min-width: 0; }
+    .section-title { font-size: clamp(1.8rem, 8vw, 2.5rem); }
+    .hero-stats { gap: 1rem 1.5rem; }
+    .stat-number { font-size: 1.9rem; }
+    .highlight-chip { font-size: 0.65rem; padding: 0.25rem 0.6rem; }
+    .filter-tabs { gap: 0.3rem; }
+    .filter-tab { padding: 0.22rem 0.55rem; font-size: 0.65rem; }
+    .mock-body { padding: 0.8rem; }
+    .stats-row { gap: 0.3rem; }
   }
 
   /* ── TOGGLE DEMO ── */
@@ -1020,20 +1085,6 @@
   }
 
   .export-btn:hover { background: var(--sage); color: var(--espresso); }
-
-  /* Auth badge */
-  .auth-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: rgba(90,171,232,0.1);
-    border: 1px solid rgba(90,171,232,0.2);
-    border-radius: 2rem;
-    padding: 0.2rem 0.7rem;
-    font-size: 0.68rem;
-    color: var(--sky);
-    font-family: 'DM Mono', monospace;
-  }
 
   .auth-badge::before { content: '🔒'; font-size: 0.7rem; }
 </style>
@@ -1629,7 +1680,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">POS<span>craft</span></div>
-  <p>Your complete restaurant & café operating system. -- by <a href="https://webtool723-beep.github.io/Websites-collection/" style="color: white;">WebCraft Studio</a></p>
+  <p>Your complete restaurant & café operating system.</p>
   <p style="color:var(--glass-border)">Order Page · Kitchen Dashboard · Real-time · Print-ready</p>
 </footer>
 
