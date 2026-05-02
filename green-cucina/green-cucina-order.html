@@ -864,6 +864,8 @@
   }
   body > * { display: none !important; }
   #billTemplate { display: block !important; }
+  header { display: none !important; }                    /* ← ADD */
+  #mobileAuthSection { display: none !important; }        /* ← ADD */
 }
 
 @page {
@@ -890,7 +892,9 @@
 </style>
 <h1>Green Cucina</h1>
 <div class="sub">Farm-to-table Café & Kitchen, Kota, Rajasthan<br>Near Dadabari, Kota — 324009 | +91 98765 43210</div>
+<div class="meta" style="margin-top:4px;"><strong>GSTIN:</strong> 08AABCG1234D1ZQ</div>
 <hr class="divider"/>
+<div class="meta"><strong>Invoice No:</strong> <span id="billInvoiceNo"></span></div>
 <div class="meta"><strong>Order ID:</strong> <span id="billOrderId"></span></div>
 <div class="meta"><strong>Table No:</strong> <span id="billTable"></span></div>
 <div class="meta"><strong>Mobile:</strong> <span id="billPhone"></span></div>
@@ -899,7 +903,11 @@
 <hr class="divider"/>
 <div id="billItems"></div>
 <hr class="divider"/>
-<div class="row bold"><span>Total Amount</span><span id="billTotal"></span></div>
+<div class="row"><span>Subtotal</span><span id="billSubtotal"></span></div>
+<div class="row"><span>CGST @ 2.5%</span><span id="billCGST"></span></div>
+<div class="row"><span>SGST @ 2.5%</span><span id="billSGST"></span></div>
+<hr class="divider"/>
+<div class="row bold"><span>Grand Total</span><span id="billTotal"></span></div>
 <hr class="divider"/>
 <div class="meta" style="font-size:0.75rem;color:#555;">Payment at counter. Please show this bill to staff.</div>
 <div class="thank">— Thank you for dining with us 🌿 —<br><strong>Green Cucina</strong></div>
@@ -1308,12 +1316,23 @@ async function placeOrder() {
 
 function downloadBill(orderId, tableNo, phoneNo, items, total) {
   const now = new Date();
+  const yy = now.getFullYear().toString().slice(-2);
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const invoiceNo = `INV-${yy}${mm}-${orderId.replace('GC-', '')}`;
+  const cgst = Math.round(total * 0.025 * 100) / 100;
+  const sgst = Math.round(total * 0.025 * 100) / 100;
+  const grandTotal = total + cgst + sgst;
+
+  document.getElementById('billInvoiceNo').textContent = invoiceNo;
   document.getElementById('billOrderId').textContent = orderId;
   document.getElementById('billTable').textContent = tableNo;
   document.getElementById('billPhone').textContent = phoneNo;
   document.getElementById('billDate').textContent = now.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
   document.getElementById('billTime').textContent = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
-  document.getElementById('billTotal').textContent = '₹' + total;
+  document.getElementById('billSubtotal').textContent = '₹' + total.toFixed(2);
+  document.getElementById('billCGST').textContent = '₹' + cgst.toFixed(2);
+  document.getElementById('billSGST').textContent = '₹' + sgst.toFixed(2);
+  document.getElementById('billTotal').textContent = '₹' + grandTotal.toFixed(2);
   document.getElementById('billItems').innerHTML = items.map(i =>
     `<div class="row"><span>${i.emoji} ${i.name} ×${i.qty}</span><span>₹${i.price * i.qty}</span></div>`
   ).join('');
