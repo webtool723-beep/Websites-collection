@@ -413,10 +413,52 @@ header {
   .form-row { flex-direction:column; gap:0; }
   .header-right { gap:8px; flex-wrap:wrap; }
 }
+
+  /* ── Mobile Block Overlay ── */
+#mobileBlock {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #1a1a1a;
+  color: #ffffff;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+}
+#mobileBlock .mb-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+#mobileBlock h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+#mobileBlock p {
+  font-size: 0.95rem;
+  color: #aaaaaa;
+  line-height: 1.6;
+  max-width: 300px;
+}
+@media (max-width: 768px) {
+  #mobileBlock {
+    display: flex;
+  }
+}
 </style>
 </head>
 <body>
-
+<!-- Mobile Block Message -->
+<div id="mobileBlock">
+  <div class="mb-icon">🖥️</div>
+  <h2>Desktop Only Experience</h2>
+  <p>This dashboard is designed for larger screens. Please open it on a desktop or laptop for the best experience.</p>
+</div>
 <!-- CONFIG -->
 <script>
   const SUPABASE_URL = 'https://bifohqaceaufxlyfwpgp.supabase.co';
