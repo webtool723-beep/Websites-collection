@@ -35,16 +35,20 @@
   window._fbPasswordReset = (email) => sendPasswordResetEmail(auth, email);
 
   // ── Auth state gate ──
-  onAuthStateChanged(auth, (user) => {
+  const _roleClient = supabase.createClient('https://bifohqaceaufxlyfwpgp.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpZm9ocWFjZWF1ZnhseWZ3cGdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzgyNjcsImV4cCI6MjA5MzA1NDI2N30.yx3jrNHPUuBw2960anvnAzVkDvDGBnuq01NbFkXJ_TM');
+
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
-      if (user.emailVerified) {
+      const { data } = await _roleClient.from('user_roles').select('role').eq('email', user.email).single();
+      if (!data) await _roleClient.from('user_roles').insert({ email: user.email, role: 'customer' });
+      if (user.emailVerified && data?.role === 'admin') {
         document.getElementById('authOverlay').style.display = 'none';
         document.getElementById('appShell').style.display    = 'block';
         document.getElementById('authUserEmail').textContent = user.email;
-        // Now kick off the app
         if (typeof window.appInit === 'function') window.appInit();
+      } else if (user.emailVerified) {
+        showRestrictedScreen();
       } else {
-        // Signed in but email not verified
         showVerifyScreen(user);
       }
     } else {
@@ -57,6 +61,14 @@
     document.getElementById('appShell').style.display    = 'none';
     document.getElementById('loginBox').style.display    = 'block';
     document.getElementById('verifyBox').style.display   = 'none';
+    document.getElementById('restrictBox').style.display = 'none';
+  }
+  function showRestrictedScreen() {
+    document.getElementById('authOverlay').style.display = 'flex';
+    document.getElementById('appShell').style.display    = 'none';
+    document.getElementById('loginBox').style.display    = 'none';
+    document.getElementById('verifyBox').style.display   = 'none';
+    document.getElementById('restrictBox').style.display = 'block';
   }
 
   function showVerifyScreen(user) {
@@ -108,7 +120,8 @@
     const user = auth.currentUser;
     if (!user) return;
     await user.reload();
-    if (user.emailVerified) {
+    const { data } = await _roleClient.from('user_roles').select('role').eq('email', user.email).single();
+    if (user.emailVerified && data?.role === 'admin') {
       document.getElementById('authOverlay').style.display = 'none';
       document.getElementById('appShell').style.display    = 'block';
       document.getElementById('authUserEmail').textContent = user.email;
@@ -734,7 +747,25 @@
       ← Back to Login
     </button>
     <div id="verifyMsg" style="margin-top:14px;font-size:0.82rem;color:var(--text-mid);min-height:20px;font-weight:500;"></div>
+ </div>
+
+  <div id="restrictBox" style="display:none;
+    background:var(--surface); border:1px solid var(--border); border-radius:20px;
+    padding:40px 36px; width:100%; max-width:400px; margin:24px; text-align:center;
+    box-shadow:var(--shadow-lg);">
+    <div style="font-size:3rem;margin-bottom:16px;">🚫</div>
+    <div style="font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:8px;">Restricted Access</div>
+    <div style="font-size:0.85rem;color:var(--text-mid);margin-bottom:20px;line-height:1.6;">
+      This page is for verified staff only.<br/>You do not have permission to access this area.
+    </div>
+    <button onclick="handleSignOut()" style="
+      width:100%;background:var(--primary);border:none;border-radius:12px;
+      padding:12px;color:white;font-family:inherit;font-weight:700;
+      font-size:0.9rem;cursor:pointer;">
+      ← Back to Login
+    </button>
   </div>
+
 </div>
 
 <!-- ══════════════════════════════════════════════
