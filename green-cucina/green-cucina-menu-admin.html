@@ -25,23 +25,38 @@
   window._fbPasswordReset = (e) => sendPasswordResetEmail(auth,e);
   window._fbSendVerification = (u) => sendEmailVerification(u);
 
-  onAuthStateChanged(auth, user => {
-    if (user && user.emailVerified) {
+const _roleClient = supabase.createClient('https://bifohqaceaufxlyfwpgp.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpZm9ocWFjZWF1ZnhseWZ3cGdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzgyNjcsImV4cCI6MjA5MzA1NDI2N30.yx3jrNHPUuBw2960anvnAzVkDvDGBnuq01NbFkXJ_TM');
+
+onAuthStateChanged(auth, async (user) => {
+    if (!user) { showLoginBox(); return; }
+      const { data } = await _roleClient.from('user_roles').select('role').eq('email', user.email).single();
+      if (!data) await _roleClient.from('user_roles').insert({ email: user.email, role: 'customer' });
+      if (user && user.emailVerified && data?.role === 'admin') {
       document.getElementById('authOverlay').style.display = 'none';
       document.getElementById('appShell').style.display = 'block';
       document.getElementById('authUserEmail').textContent = user.email;
       if (typeof window.adminInit === 'function') window.adminInit();
+    } else if (user && user.emailVerified) {
+      showRestrictedScreen();
     } else if (user && !user.emailVerified) {
       showVerifyBox(user);
     } else {
       showLoginBox();
     }
   });
-  function showLoginBox() {
+function showLoginBox() {
     document.getElementById('authOverlay').style.display = 'flex';
     document.getElementById('appShell').style.display = 'none';
     document.getElementById('loginBox').style.display = 'block';
     document.getElementById('verifyBox').style.display = 'none';
+    document.getElementById('restrictBox').style.display = 'none';
+  }
+  function showRestrictedScreen() {
+    document.getElementById('authOverlay').style.display = 'flex';
+    document.getElementById('appShell').style.display    = 'none';
+    document.getElementById('loginBox').style.display    = 'none';
+    document.getElementById('verifyBox').style.display   = 'none';
+    document.getElementById('restrictBox').style.display = 'block';
   }
   function showVerifyBox(user) {
     document.getElementById('authOverlay').style.display = 'flex';
@@ -70,7 +85,9 @@
   window.checkVerified = async function() {
     const user = auth.currentUser; if (!user) return;
     await user.reload();
-    if (user.emailVerified) location.reload();
+const { data } = await _roleClient.from('user_roles').select('role').eq('email', user.email).single();
+    if (user.emailVerified && data?.role === 'admin') location.reload();
+    else if (user.emailVerified) document.getElementById('verifyMsg').textContent = '⛔ Access denied. You do not have admin access.';
     else document.getElementById('verifyMsg').textContent = '⚠️ Not verified yet. Check your inbox.';
   };
   window.handleForgotPassword = async function() {
@@ -317,53 +334,9 @@ header {
   .header-email { display:none; }
   .form-row { flex-direction:column; gap:0; }
 }
-
-  /* ── Mobile Block Overlay ── */
-#mobileBlock {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  background: #1a1a1a;
-  color: #ffffff;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2rem;
-  font-family: 'Inter', sans-serif;
-}
-#mobileBlock .mb-icon {
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
-}
-#mobileBlock h2 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #ffffff;
-}
-#mobileBlock p {
-  font-size: 0.95rem;
-  color: #aaaaaa;
-  line-height: 1.6;
-  max-width: 300px;
-}
-@media (max-width: 768px) {
-  #mobileBlock {
-    display: flex;
-  }
-}
 </style>
 </head>
 <body>
-
-  <!-- Mobile Block Message -->
-<div id="mobileBlock">
-  <div class="mb-icon">🖥️</div>
-  <h2>Desktop Only Experience</h2>
-  <p>This dashboard is designed for larger screens. Please open it on a desktop or laptop for the best experience.</p>
-</div>
 
 <!-- CONFIG -->
 <script>
@@ -406,6 +379,14 @@ header {
     <div id="verifyMsg" style="margin-top:12px;font-size:0.82rem;color:var(--text-mid);min-height:18px;"></div>
     <button class="auth-link" style="margin-top:12px;display:block;" onclick="handleSignOut()">← Back to Login</button>
   </div>
+  <div id="restrictBox" class="auth-box" style="display:none;text-align:center;">
+    <div style="font-size:3rem;margin-bottom:16px;">🚫</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);margin-bottom:8px;">Restricted Access</div>
+    <div style="font-size:0.82rem;color:var(--text-mid);margin-bottom:20px;line-height:1.6;">
+      This page is for verified staff only.<br/>You do not have permission to access this area.
+    </div>
+    <button class="auth-btn-primary" onclick="handleSignOut()">← Back to Login</button>
+  </div>
 </div>
 
 <!-- ═══════════════════════ APP SHELL ═══════════════════════ -->
@@ -427,7 +408,6 @@ header {
   <button class="main-tab active" onclick="switchTab('categories')">📂 Categories</button>
   <button class="main-tab" onclick="switchTab('items')">🍽️ Menu Items</button>
   <!---<button class="main-tab" onclick="switchTab('setup')">🗄️ Supabase Setup</button>---  add this line to check supabase connection  -->
-  
 </div>
 
 <!-- ════ CATEGORIES TAB ════ -->
