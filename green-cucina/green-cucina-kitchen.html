@@ -35,16 +35,21 @@
   window._fbPasswordReset = (email) => sendPasswordResetEmail(auth, email);
 
   // ── Auth state gate ──
-  onAuthStateChanged(auth, (user) => {
+const _roleClient = supabase.createClient('https://bifohqaceaufxlyfwpgp.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpZm9ocWFjZWF1ZnhseWZ3cGdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzgyNjcsImV4cCI6MjA5MzA1NDI2N30.yx3jrNHPUuBw2960anvnAzVkDvDGBnuq01NbFkXJ_TM');
+
+onAuthStateChanged(auth, async (user) => {
     if (user) {
-      if (user.emailVerified) {
+      const { data } = await _roleClient.from('user_roles').select('role').eq('email', user.email).single();
+      if (!data) await _roleClient.from('user_roles').insert({ email: user.email, role: 'customer' });
+      if (user.emailVerified && data?.role === 'admin') {
         document.getElementById('authOverlay').style.display = 'none';
         document.getElementById('appShell').style.display    = 'block';
         document.getElementById('authUserEmail').textContent = user.email;
         // Now kick off the app
         if (typeof window.appInit === 'function') window.appInit();
+      } else if (user.emailVerified) {
+        showRestrictedScreen();
       } else {
-        // Signed in but email not verified
         showVerifyScreen(user);
       }
     } else {
@@ -58,7 +63,13 @@
     document.getElementById('loginBox').style.display    = 'block';
     document.getElementById('verifyBox').style.display   = 'none';
   }
-
+function showRestrictedScreen() {
+    document.getElementById('authOverlay').style.display = 'flex';
+    document.getElementById('appShell').style.display    = 'none';
+    document.getElementById('loginBox').style.display    = 'none';
+    document.getElementById('verifyBox').style.display   = 'none';
+    document.getElementById('restrictBox').style.display = 'block';
+  }
   function showVerifyScreen(user) {
     document.getElementById('authOverlay').style.display = 'flex';
     document.getElementById('appShell').style.display    = 'none';
@@ -108,7 +119,8 @@
     const user = auth.currentUser;
     if (!user) return;
     await user.reload();
-    if (user.emailVerified) {
+    const { data } = await _roleClient.from('user_roles').select('role').eq('email', user.email).single();
+if (user.emailVerified && data?.role === 'admin') {
       document.getElementById('authOverlay').style.display = 'none';
       document.getElementById('appShell').style.display    = 'block';
       document.getElementById('authUserEmail').textContent = user.email;
@@ -656,6 +668,8 @@
     <div style="margin-top:20px;padding:14px;background:#1a1500;border:1px solid #ffc10730;border-radius:10px;font-size:0.78rem;color:#ffc107;line-height:1.6;">
       🔒 Only verified email accounts can access the dashboard.
     </div>
+
+    
   </div>
 
   <!-- VERIFY BOX -->
@@ -687,7 +701,24 @@
       ← Back to Login
     </button>
     <div id="verifyMsg" style="margin-top:14px;font-size:0.82rem;color:#81c784;min-height:20px;"></div>
+</div>
+
+  <div id="restrictBox" style="display:none;
+    background:#1a0a0a; border:1px solid #5a1a1a; border-radius:20px;
+    padding:40px 36px; width:100%; max-width:400px; margin:24px; text-align:center;">
+    <div style="font-size:3rem;margin-bottom:16px;">🚫</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#ffcccc;margin-bottom:8px;">Restricted Access</div>
+    <div style="font-size:0.85rem;color:#ff8a80;margin-bottom:20px;line-height:1.6;">
+      This page is for verified staff only.<br/>You do not have permission to access this area.
+    </div>
+    <button onclick="handleSignOut()" style="
+      width:100%;background:#3a0a0a;border:1px solid #c62828;border-radius:12px;
+      padding:12px;color:#ff8a80;font-family:'DM Sans',sans-serif;font-weight:600;
+      font-size:0.9rem;cursor:pointer;">
+      ← Back to Login
+    </button>
   </div>
+
 </div>
 
 <!-- ══════════════════════════════════════════════
@@ -1532,7 +1563,6 @@ let _editOrderId = null;
 let _editItems = [];
 
 
-
 function openEditModal(orderId) {
   const order = orders.find(o => o.order_id === orderId);
   if (!order) return;
@@ -1720,7 +1750,5 @@ async function saveEditedOrder() {
   <hr class="ps-divider"/>
   <div class="ps-foot">Payment at counter · Thank you 🌿</div>
 </div>
-
-
 </body>
 </html>
