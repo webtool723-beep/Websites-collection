@@ -1087,79 +1087,12 @@
   .export-btn:hover { background: var(--sage); color: var(--espresso); }
 
   .auth-badge::before { content: '🔒'; font-size: 0.7rem; }
-  /* ── MOBILE WARNING BANNER ── */
-  #mobile-banner {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: var(--espresso);
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 2.5rem 2rem;
-  }
-
-  @media (max-width: 768px) {
-    #mobile-banner { display: flex; }
-  }
-
-  .mb-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1.2rem;
-    animation: mb-bounce 2s ease-in-out infinite;
-  }
-
-  @keyframes mb-bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
-
-  .mb-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--cream);
-    margin-bottom: 1rem;
-    line-height: 1.2;
-  }
-
-  .mb-desc {
-    font-size: 0.88rem;
-    color: var(--cream-dim);
-    line-height: 1.75;
-    max-width: 300px;
-    margin-bottom: 2rem;
-  }
-
-  .mb-desc strong { color: var(--amber); font-weight: 600; }
-
-  .mb-btn {
-    background: transparent;
-    border: 1px solid var(--glass-border);
-    color: var(--cream-dim);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    padding: 0.6rem 1.6rem;
-    border-radius: 2rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 0.05em;
-  }
-
-  .mb-btn:hover { border-color: var(--amber); color: var(--amber); }
+  
 </style>
 </head>
 <body>
 
-<!-- MOBILE WARNING BANNER -->
-<div id="mobile-banner">
-  <div class="mb-icon">🖥️</div>
-  <h2 class="mb-title">Best viewed on Desktop</h2>
-  <p class="mb-desc">This page is designed for a desktop experience. For the best view, please enable <strong>Desktop Site</strong> in your browser settings.</p>
-  <button class="mb-btn" onclick="document.getElementById('mobile-banner').style.display='none'">Continue Anyway</button>
-</div>
+
 
 <!-- NAV -->
 <nav>
