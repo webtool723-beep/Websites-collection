@@ -335,6 +335,102 @@
   animation: softBlink 1.4s ease-in-out infinite;
   margin-top: 6px;
 }
+
+/* ── REVIEWS ── */
+.reviews-grid {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.review-card {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  padding: 36px 32px 32px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(107,79,53,0.1);
+}
+.review-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--brown-lt);
+  margin-bottom: 14px;
+}
+.review-stars {
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: #d4a017;
+  margin-bottom: 12px;
+}
+.review-author {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 14px;
+}
+.review-title {
+  font-size: 13px;
+  color: var(--text-mid);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+.review-project {
+  font-size: 12px;
+  color: var(--text-lt);
+  margin-top: 8px;
+}
+.review-project a {
+  color: var(--brown-mid);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.review-project a:hover {
+  border-color: var(--brown-mid);
+}
+.review-coming-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--brown-lt);
+  border: 0.5px solid var(--border);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+/* ── SKELETON SHIMMER ── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg3) 25%,
+    #f0e8d8 37%,
+    var(--bg3) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: 8px;
+}
+.skeleton-block {
+  width: 100%;
+  height: 60px;
+  margin-bottom: 4px;
+}
+@keyframes shimmer {
+  0%   { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 </style>
 </head>
 <body>
@@ -369,12 +465,9 @@
       <a href="https://docs.google.com/spreadsheets/d/1KvO4fXJF79hmCsgJ1-lNCtEpCTUNm1ehyNwlAvkrv9w/edit?usp=sharing">Cafe2</a>, 
       <a href="https://docs.google.com/spreadsheets/d/1bsr7Vlo4DQFmgOHeVnQ_I0SUGtIy64N5_wqLEAFxCH0/edit?usp=sharing">Gym</a>,
       <a href="https://docs.google.com/spreadsheets/d/1XwIpoB5G0ND3us-EJm5lS50xrk06lTGIvckrqi0FgQM/edit?usp=sharing">Turf</a>,  
-      <a href="https://docs.google.com/spreadsheets/d/1H6AAu4U652Aw2RXRuUYzZDKvcwsk1vmsjsi2wEoZEr0/edit?usp=sharing">Salon</a>, 
-      <a href="https://docs.google.com/spreadsheets/d/1f6FsC0JIn2YCziia7I12O2-gNUoZE25bdtU-oeKeBVU/edit?usp=sharing">Coaching - Contact</a>, 
-      <a href="https://docs.google.com/spreadsheets/d/1J1RA4VKxJBvDm8GygO-7s4LUbgTexpc2tyDUtxWgsL4/edit?usp=sharing">Coaching - Enroll</a>
-    </h3>
-   <br>
-      <h3> Green Cucina - <a href="green-cucina/kitchen.html">Kitchen Screen</a></h3>
+      <a href="https://docs.google.com/spreadsheets/d/1H6AAu4U652Aw2RXRuUYzZDKvcwsk1vmsjsi2wEoZEr0/edit?usp=sharing">Salon</a></h3>
+      <br>
+      <h3> Green Cucina - <a href="green-cucina/green-cucina-kitchen.html">Kitchen Screen</a></h3>
   </div>
 
   <div class="projects-grid">
@@ -543,38 +636,6 @@
       </div>
     </a>
 
-   <!-- COACHING -->
-    <a href="coaching-website/index.html" class="project-card reveal" style="transition-delay: 0.3s;">
-      <div class="card-thumb">
-        <div class="mock salon-mock">
-          <div class="m-bar"></div>
-          <div class="m-hero">
-            <div class="m-title">Apex Institute - Coaching</div>
-            <div class="m-sub">Education</div>
-            <div class="m-btn">Enroll Now</div>
-          </div>
-          <div class="m-cards">
-            <div class="m-card"></div>
-            <div class="m-card"></div>
-            <div class="m-card"></div>
-          </div>
-        </div>
-        <div class="card-overlay">
-          <div class="overlay-btn">View Site →</div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="card-num">06 — Coaching</div>
-        <div class="card-title">Apex Institute <span class="blink-text"><h2> ● COACHING</h2></span></div>
-        <div class="card-desc">Elegant and minimal website for a coaching with contact and enroll buttons.</div>
-        <div class="card-tags">
-          <span class="tag">Education</span>
-          <span class="tag">Coaching</span>
-          <span class="tag">Contact</span>
-        </div>
-      </div>
-    </a>
-
   </div>
 </section>
 
@@ -600,6 +661,26 @@
     </div>
   </div>
 </div>
+
+<!-- REVIEWS -->
+<section class="section" id="reviews">
+  <div class="reveal">
+    <p class="section-label">Testimonials</p>
+    <h2 class="section-title">What Clients Say</h2>
+  </div>
+
+  <div class="reviews-grid">
+    <div class="review-card reveal" style="transition-delay: 0.1s;">
+      <img src="r1.jpeg" alt="Dr. Rupesh Goel" class="review-avatar" />
+      <div class="review-stars">★★★★★</div>
+      <div class="review-coming-badge">Full review coming soon</div>
+      <div class="skeleton skeleton-block"></div>
+      <div class="review-author">Dr. Rupesh Goel</div>
+      <div class="review-title">MD Physician, Pain & Critical Care Specialist</div>
+      <div class="review-project">Aarav Hospital · <a href="https://www.aarav-hospital.com" target="_blank" rel="noopener noreferrer">aarav-hospital.com</a></div>
+    </div>
+  </div>
+</section>
 
 <!-- CONTACT -->
 <section class="contact-section reveal" id="contact">
