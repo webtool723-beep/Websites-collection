@@ -55,6 +55,34 @@
   }
   .nav-links a:hover { color: var(--brown); }
 
+  /* ── DROPDOWN TOGGLE (mobile only) ── */
+  .nav-drop-btn {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .nav-drop-btn:hover {
+    color: var(--brown);
+    border-color: var(--brown-lt);
+  }
+  .nav-drop-btn svg {
+    transition: transform 0.3s ease;
+  }
+  .nav-drop-btn.open svg {
+    transform: rotate(180deg);
+  }
+
   /* ── HERO ── */
   .hero {
     min-height: 100vh;
@@ -313,7 +341,40 @@
   /* ── RESPONSIVE ── */
   @media (max-width: 640px) {
     nav { padding: 0 4%; }
-    .nav-links { gap: 18px; }
+    .nav-drop-btn { display: flex; }
+    .nav-links {
+      position: absolute;
+      top: 100%;
+      left: 4%; right: 4%;
+      flex-direction: column;
+      gap: 0;
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      box-shadow: 0 12px 40px rgba(30,15,5,0.1);
+    }
+    .nav-links.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .nav-links li { width: 100%; }
+    .nav-links a {
+      display: block;
+      font-size: 14px;
+      padding: 11px 20px;
+      letter-spacing: 0.06em;
+    }
+    .nav-links a:hover {
+      background: var(--bg2);
+      color: var(--brown);
+    }
+
     .hero, .section { padding-left: 4%; padding-right: 4%; }
     .about-strip { padding: 50px 4%; }
     .contact-section { padding: 60px 4%; }
@@ -438,9 +499,16 @@
 <!-- NAV -->
 <nav>
   <div class="nav-logo">WebCraft Studio</div>
+  <button class="nav-drop-btn" aria-label="Menu">
+    <span>Explore</span>
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
   <ul class="nav-links">
     <li><a href="#work">Work</a></li>
     <li><a href="#about">About</a></li>
+    <li><a href="#reviews">Testimonials</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -645,6 +713,7 @@
     <p class="section-label" style="margin-bottom:10px;">About</p>
     <h2 class="section-title" style="margin-bottom:14px;">A designer who builds</h2>
     <p>I design and develop websites for local businesses — clean, fast, and built to convert. Every project starts with understanding the brand, then crafting something that truly fits.</p>
+    <p style="margin-top:18px;"><a href="https://webtool723-beep.github.io/Websites-collection/#about" target="_blank" rel="noopener noreferrer" style="color:var(--brown-mid);text-decoration:none;border-bottom:1px solid var(--brown-lt);font-size:13px;">View full portfolio collection →</a></p>
   </div>
   <div class="about-stats">
     <div class="stat-item">
@@ -672,11 +741,11 @@
   <div class="reviews-grid">
     <div class="review-card reveal" style="transition-delay: 0.1s;">
       <img src="r1.jpeg" alt="Dr. Rupesh Goel" class="review-avatar" />
+      <div class="review-author">Dr. Rupesh Goel</div>
+      <div class="review-title">MD Physician, Pain & Critical Care Specialist</div>
       <div class="review-stars">★★★★★</div>
       <div class="review-coming-badge">Full review coming soon</div>
       <div class="skeleton skeleton-block"></div>
-      <div class="review-author">Dr. Rupesh Goel</div>
-      <div class="review-title">MD Physician, Pain & Critical Care Specialist</div>
       <div class="review-project">Aarav Hospital · <a href="https://www.aarav-hospital.com" target="_blank" rel="noopener noreferrer">aarav-hospital.com</a></div>
     </div>
   </div>
@@ -695,8 +764,8 @@
 <footer>
   <span>© All rights reserved.</span>
   <div class="footer-links">
-    <a href="#"></a>
-    <a href="#"></a>
+    <a href="https://webtool723-beep.github.io/Websites-collection/#about" target="_blank" rel="noopener noreferrer">Portfolio</a>
+    <a href="#work">Work</a>
     <a href="https://wa.link/mwgr69">WhatsApp</a>
   </div>
 </footer>
@@ -706,6 +775,22 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Dropdown toggle
+  const dropBtn = document.querySelector('.nav-drop-btn');
+  const navLinks = document.querySelector('.nav-links');
+  if (dropBtn && navLinks) {
+    dropBtn.addEventListener('click', () => {
+      dropBtn.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        dropBtn.classList.remove('open');
+        navLinks.classList.remove('open');
+      });
+    });
+  }
 </script>
 </body>
 </html>
