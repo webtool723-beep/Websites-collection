@@ -430,7 +430,25 @@
   font-size: 18px;
   letter-spacing: 3px;
   color: #d4a017;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+}
+.review-quote {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.8;
+  font-style: italic;
+  padding: 0 4px;
+  margin-bottom: 4px;
+  position: relative;
+}
+.review-quote::before {
+  content: '\201C';
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 40px;
+  color: var(--brown-lt);
+  line-height: 0;
+  vertical-align: -8px;
+  margin-right: 4px;
 }
 .review-author {
   font-family: 'Cormorant Garamond', serif;
@@ -458,6 +476,21 @@
 }
 .review-project a:hover {
   border-color: var(--brown-mid);
+}
+.review-form-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--brown-mid);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.review-form-link:hover {
+  color: var(--brown);
+  border-color: var(--brown-lt);
 }
 .review-coming-badge {
   display: inline-block;
@@ -736,6 +769,7 @@
   <div class="reveal">
     <p class="section-label">Testimonials</p>
     <h2 class="section-title">What Clients Say</h2>
+    <a href="https://forms.gle/L158yz3CrRUN4uDNA" target="_blank" rel="noopener noreferrer" class="hero-cta" style="margin-top:10px;">Submit a Review</a>
   </div>
 
   <div class="reviews-grid">
@@ -744,9 +778,9 @@
       <div class="review-author">Dr. Rupesh Goel</div>
       <div class="review-title">MD Physician, Pain & Critical Care Specialist</div>
       <div class="review-stars">★★★★★</div>
-      <div class="review-coming-badge">Full review coming soon</div>
-      <div class="skeleton skeleton-block"></div>
+      <div class="review-quote">I had an excellent experience with this page that creates websites tailored to individual needs. The process was smooth and highly customizable, with the person carefully listening to my requirements and delivering a professional, visually appealing site that perfectly matched my vision. The design was modern, the functionality seamless across devices, and every detail — from layout to navigation — was thoughtfully crafted. It's a service that truly understands your goals and delivers results that feel made just for you.</div>
       <div class="review-project">Aarav Hospital · <a href="https://www.aarav-hospital.com" target="_blank" rel="noopener noreferrer">aarav-hospital.com</a></div>
+      <a href="https://forms.gle/L158yz3CrRUN4uDNA" target="_blank" rel="noopener noreferrer" class="review-form-link">Share your experience →</a>
     </div>
   </div>
 </section>
