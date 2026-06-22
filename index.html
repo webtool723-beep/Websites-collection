@@ -504,6 +504,101 @@
   margin-bottom: 16px;
 }
 
+/* ── LIVE SITES ── */
+.live-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 32px;
+}
+.live-card {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.live-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(107,79,53,0.1);
+}
+.live-preview {
+  overflow: hidden;
+}
+.live-browser {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border-bottom: 0.5px solid var(--border);
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--brown-lt);
+}
+.live-url {
+  flex: 1;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-lt);
+  background: var(--bg2);
+  border-radius: 4px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.live-frame-wrap {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+}
+.live-frame-wrap iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  pointer-events: none;
+}
+.live-info {
+  padding: 20px 22px 22px;
+  text-align: center;
+}
+.live-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.live-desc {
+  font-size: 13px;
+  color: var(--text-lt);
+  margin-bottom: 16px;
+}
+.live-btn {
+  display: inline-block;
+  background: var(--brown);
+  color: var(--bg);
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 11px 28px;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+.live-btn:hover { background: var(--text); transform: translateY(-1px); }
+
+@media (max-width: 640px) {
+  .live-frame-wrap { height: 280px; }
+  .live-grid { grid-template-columns: 1fr; }
+}
+
 /* ── SKELETON SHIMMER ── */
 .skeleton {
   background: linear-gradient(
@@ -781,6 +876,36 @@
       <div class="review-quote">I had an excellent experience with this page that creates websites tailored to individual needs. The process was smooth and highly customizable, with the person carefully listening to my requirements and delivering a professional, visually appealing site that perfectly matched my vision. The design was modern, the functionality seamless across devices, and every detail — from layout to navigation — was thoughtfully crafted. It's a service that truly understands your goals and delivers results that feel made just for you.</div>
       <div class="review-project">Aarav Hospital · <a href="https://www.aarav-hospital.com" target="_blank" rel="noopener noreferrer">aarav-hospital.com</a></div>
       <a href="https://forms.gle/L158yz3CrRUN4uDNA" target="_blank" rel="noopener noreferrer" class="review-form-link">Share your experience →</a>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE SITES -->
+<section class="section" id="live-sites">
+  <div class="reveal">
+    <p class="section-label">Live Projects</p>
+    <h2 class="section-title">Websites in Action</h2>
+    <p class="section-desc">Real websites we've built — live and running for our customers.</p>
+  </div>
+
+  <div class="live-grid">
+    <div class="live-card reveal" style="transition-delay: 0.1s;">
+      <div class="live-preview">
+        <div class="live-browser">
+          <span class="live-dot"></span>
+          <span class="live-dot"></span>
+          <span class="live-dot"></span>
+          <span class="live-url">aarav-hospital.com</span>
+        </div>
+        <div class="live-frame-wrap">
+          <iframe src="https://www.aarav-hospital.com" loading="lazy" title="Aarav Hospital"></iframe>
+        </div>
+      </div>
+      <div class="live-info">
+        <div class="live-name">Aarav Hospital</div>
+        <div class="live-desc">MD Physician, Pain & Critical Care</div>
+        <a href="https://www.aarav-hospital.com" target="_blank" rel="noopener noreferrer" class="live-btn">Open Website →</a>
+      </div>
     </div>
   </div>
 </section>
